@@ -1,6 +1,5 @@
 import React from 'react'
 import { View, Text, Button } from 'react-native'
-import { Project } from '../projects/Projects'
 
 ProjectsScreen.navigationOptions = {
   title: 'Projects',
@@ -15,11 +14,7 @@ export default function ProjectsScreen({ route, navigation }) {
   //   key: '',
   // })
   newProject = () => {
-    const project = new Project({
-      title: 'test',
-      createdAt: new Date(),
-    })
-    console.log(project)
+
   }
   return (
   <View>
