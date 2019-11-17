@@ -4,11 +4,13 @@ import { createStackNavigator } from 'react-navigation-stack'
 import Projects from './screens/Projects'
 import Issues from './screens/Issues'
 import Details from './screens/Details'
+import CreateProject from './screens/Create-project'
 
 const AppNavigator = createStackNavigator({
   Projects,
   Issues,
-  Details
+  Details,
+  CreateProject,
 },
 {
   initialRouteName: 'Projects',

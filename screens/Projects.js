@@ -1,28 +1,29 @@
-import React from 'react'
-import { View, Text, Button } from 'react-native'
+import React, { useState, useEffect } from 'react'
+import { View, Text, Button, FlatList, ListItem } from 'react-native'
 
 ProjectsScreen.navigationOptions = {
   title: 'Projects',
 }
 
 export default function ProjectsScreen({ route, navigation }) {
-  // onPress={() => navigation.navigate('Map', { item })}
-  // const place = navigation.getParam('item', {
-  //   latitude: 0,
-  //   longtitude: 0,
-  //   title: '',
-  //   key: '',
-  // })
-  newProject = () => {
+  const [projectList, setProjectList] = useState([])
+  
+  renderItem = ({ item }) => (
+    <ListItem title={item.title} />
+  )
 
-  }
   return (
-  <View>
-    <Text>Projects</Text>
-    <Button
-      title="Press me"
-      onPress={() => newProject()}
-    />
-  </View>
+    <View>
+      <Text>Projects</Text>
+      <FlatList
+        keyExtractor={item => item.id.toString()}
+        data={projectList}
+        renderItem={this.renderItem}
+      />
+      <Button
+        title="Add Project"
+        onPress={() => navigation.navigate('CreateProject', { addProject })}
+      />
+    </View>
   )
 }
