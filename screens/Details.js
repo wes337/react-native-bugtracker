@@ -1,49 +1,60 @@
 import * as firebase from 'firebase'
 import React, { useState, useEffect } from 'react'
 import { View } from 'react-native'
-import { Text, CheckBox } from 'react-native-elements'
+import { Text, Button, CheckBox } from 'react-native-elements'
 
 DetailsScreen.navigationOptions = {
   title: 'Details',
 }
 
 export default function DetailsScreen({ route, navigation }) {
+  const [loading, setLoading] = useState(false)
   const [issueCompleted, setIssueCompleted] = useState(false)
-
-  const issue = navigation.getParam('issue', {
-    title: '',
-    descr: '',
-    category: '',
-    dueDate: null,
-    importance: 0,
-    completedOn: null,
-  })
+  const [issue, setIssue] = useState({})
+  const { id, projectId } = navigation.getParam('issue')
 
   useEffect(() => {
-    issue.completedOn && setIssueCompleted(true)
+    setLoading(true)
+    const issueRef = firebase.database().ref(`issues/${projectId}/${id}`)
+    issueRef.on('value', snapshot => {
+      const issueObject = snapshot.val()
+      setIssue(issueObject)
+      issueObject.completedOn && setIssueCompleted(true)
+      setLoading(false)
+    })
+    return () => issueRef.off()
   }, [])
 
-  toggleComplete = value => {
-    setIssueCompleted(value)
-    const completedOn = value
+  setComplete = complete => {
+    setLoading(true)
+    setIssueCompleted(complete)
+    const completedOn = complete
       ? new Date()
       : null
-    firebase.database().ref(`issues/${issue.projectId}/${issue.id}`).update({ completedOn: value })
+    const updateIssue = firebase.database().ref(`issues/${projectId}/${id}`)
+    updateIssue.update({ completedOn }, () => {
+      setLoading(false)
+    })
+  }
+
+  if (loading) {
+    return <View><Text>Loading...</Text></View>
   }
 
   return (
   <View>
-    <Text>{issue.title}</Text>
+    <Text h2>{issue.title}</Text>
     <Text>{issue.descr}</Text>
-    {/* {issue.category && <Text>{issue.category}</Text>}
-    <Text>Due on {issue.dueDate}</Text>
+    <Text>{issue.category ? issue.category : 'No category'}</Text>
+    <Text style={{ display: issue.dueDate ? 'flex' : 'none' }}>Due on {issue.dueDate}</Text>
     <Text>Importance: {issue.importance}</Text>
-    {issue.completedOn && <Text>Completed on {issue.completedOn}</Text>} */}
+    <Text style={{ display: issueCompleted ? 'flex' : 'none' }}>Completed on {issue.completedOn}</Text>
     <CheckBox
       title='Mark as complete'
       checked={issueCompleted}
-      onPress={() => toggleComplete(!issueCompleted)}
+      onPress={() => setComplete(!issueCompleted)}
     />
+    <Button title="Edit" />
   </View>
   )
 }

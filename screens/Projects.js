@@ -12,7 +12,8 @@ export default function ProjectsScreen({ route, navigation }) {
 
   useEffect(() => {
     setLoading(true)
-    firebase.database().ref('projects/').on('value', snapshot => {
+    const projectsRef = firebase.database().ref('projects/')
+    projectsRef.on('value', snapshot => {
       const data = snapshot.val()
       const projects = []
       data && Object.keys(data) && Object.keys(data).map(
@@ -21,19 +22,15 @@ export default function ProjectsScreen({ route, navigation }) {
       setProjectList(projects)
       setLoading(false)
     })
+    return () => projectsRef.off()
   }, [])
 
   removeProject = (projectId) => {
     setLoading(true)
-    const removeProject = firebase.database().ref(`projects/${projectId}`);
-    removeProject.remove()
-      .then(() => {
-        setLoading(false)
-      })
-      .catch(err => {
-        Alert.alert("Remove failed: " + error.message)
-        setLoading(false)
-      })
+    const removeProject = firebase.database().ref(`projects/${projectId}`)
+    removeProject.remove(() => {
+      setLoading(false)
+    })
   }
 
   renderProjects = ({ item: project }) => (

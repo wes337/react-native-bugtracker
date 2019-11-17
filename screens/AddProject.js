@@ -7,19 +7,26 @@ AddProject.navigationOptions = {
 }
 
 export default function AddProject({ route, navigation }) {
+  const [loading, setLoading] = useState(false)
   const [projectTitle, setProjectTitle] = useState('')
   const [projectDescr, setProjectDescr] = useState('')
   
   const addProject = () => {
+    setLoading(true)
     const project = {
       title: projectTitle,
       descr: projectDescr,
       createdAt: new Date(),
     }
-    firebase.database().ref('projects/').push(
-      { ...project }
-    )
+    const projectsRef = firebase.database().ref('projects/')
+    projectsRef.push({ ...project }, () => {
+      setLoading(false)
+    })
     navigation.navigate('Projects')
+  }
+
+  if (loading) {
+    return <View><Text>Loading...</Text></View>
   }
 
   return (

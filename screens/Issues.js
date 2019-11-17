@@ -18,7 +18,8 @@ export default function IssuesScreen({ route, navigation }) {
 
   useEffect(() => {
     setLoading(true)
-    firebase.database().ref('issues/' + project.id).on('value', snapshot => {
+    const issuesRef = firebase.database().ref('issues/' + project.id)
+    issuesRef.on('value', snapshot => {
       const data = snapshot.val()
       const issues = []
       data && Object.keys(data) && Object.keys(data).map(
@@ -27,22 +28,15 @@ export default function IssuesScreen({ route, navigation }) {
       setIssuesList(issues)
       setLoading(false)
     })
-    return () => {
-      firebase.database().ref().off()
-    }
+    return () => issuesRef.off()
   }, [])
 
   removeIssue = (issueId) => {
     setLoading(true)
     const removeIssue = firebase.database().ref(`issues/${project.id}/${issueId}`);
-    removeIssue.remove()
-      .then(() => {
-        setLoading(false)
-      })
-      .catch(err => {
-        Alert.alert("Remove failed: " + error.message)
-        setLoading(false)
-      })
+    removeIssue.remove(() => {
+      setLoading(false)
+    })
   }
 
   renderIssues = ({ item: issue }) => (

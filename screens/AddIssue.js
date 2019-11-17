@@ -9,6 +9,7 @@ AddIssue.navigationOptions = {
 }
 
 export default function AddIssue({ route, navigation }) {
+  const [loading, setLoading] = useState(false)
   const [issue, setIssue] = useState({
     title: '',
     descr: '',
@@ -21,15 +22,21 @@ export default function AddIssue({ route, navigation }) {
   const project = navigation.getParam('project')
   
   const addIssue = () => {
+    setLoading(true)
     const newIssue = {
       ...issue,
       projectId: project.id,
       createdAt: new Date(),
     }
-    firebase.database().ref('issues/' + project.id).push(
-      { ...newIssue }
-    )
+    const issueRef = firebase.database().ref('issues/' + project.id)
+    issueRef.push({ ...newIssue }, () => {
+      setLoading(false)
+    })
     navigation.navigate('Issues')
+  }
+
+  if (loading) {
+    return <View><Text>Loading...</Text></View>
   }
 
   return (
