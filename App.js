@@ -5,7 +5,7 @@ import { createStackNavigator } from 'react-navigation-stack'
 import Projects from './screens/Projects'
 import Issues from './screens/Issues'
 import Details from './screens/Details'
-import CreateProject from './screens/Create-project'
+import AddProject from './screens/AddProject'
 
 // Your web app's Firebase configuration
 var firebaseConfig = {
@@ -24,7 +24,7 @@ const AppNavigator = createStackNavigator({
   Projects,
   Issues,
   Details,
-  CreateProject,
+  AddProject,
 },
 {
   initialRouteName: 'Projects',
