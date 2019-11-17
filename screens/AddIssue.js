@@ -1,6 +1,8 @@
 import * as firebase from 'firebase'
-import React, { useState, useEffect } from 'react'
-import { View, Text, TextInput, Button } from 'react-native'
+import React, { useState } from 'react'
+import { View} from 'react-native'
+import DatePicker from 'react-native-datepicker'
+import { Text, Input, Button, Slider } from 'react-native-elements'
 
 AddIssue.navigationOptions = {
   title: 'Add Issue',
@@ -11,16 +13,12 @@ export default function AddIssue({ route, navigation }) {
     title: '',
     descr: '',
     category: '',
-    dueDate: '',
-    importance: 0,
-    completedOn: '',
+    dueDate: new Date(),
+    importance: 3,
+    completedOn: null,
   })
 
-  const project = navigation.getParam('project', {
-    id: '',
-    title: '',
-    descr: '',
-  })
+  const project = navigation.getParam('project')
   
   const addIssue = () => {
     const newIssue = {
@@ -36,19 +34,38 @@ export default function AddIssue({ route, navigation }) {
 
   return (
     <View>
-      <Text>Add Issue to {project.title}</Text>
-      <TextInput
+      <Text h3>Add Issue to {project.title}</Text>
+      <Input
+        label="Title"
         style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
         onChangeText={title => setIssue({ ...issue, title })}
         value={issue.title}
       />
-      <TextInput
+      <Input
+        label="Description"
         multiline
         numberOfLines={4}
         style={{ height: 150, borderColor: 'gray', borderWidth: 1 }}
         onChangeText={descr => setIssue({ ...issue, descr })}
         value={issue.descr}
       />
+      <DatePicker
+        mode="date"
+        date={issue.dueDate}
+        onDateChange={dueDate => setIssue({ ...issue, dueDate })}
+        confirmBtnText="Confirm"
+        cancelBtnText="Cancel"
+        placeholder="Due date"
+        format="DD-MM-YYYY"
+        style={{ width: '100%' }}
+      />
+      <Slider
+        value={issue.importance}
+        onValueChange={importance => setIssue({ ...issue, importance })}
+        minimumValue={1}
+        maximumValue={5}
+      />
+      <Text>Importance: {issue.importance}</Text>
       <Button
         title="Submit"
         onPress={addIssue}
