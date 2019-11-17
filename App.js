@@ -6,6 +6,7 @@ import Projects from './screens/Projects'
 import Issues from './screens/Issues'
 import Details from './screens/Details'
 import AddProject from './screens/AddProject'
+import AddIssue from './screens/AddIssue'
 
 // Your web app's Firebase configuration
 var firebaseConfig = {
@@ -25,6 +26,7 @@ const AppNavigator = createStackNavigator({
   Issues,
   Details,
   AddProject,
+  AddIssue,
 },
 {
   initialRouteName: 'Projects',

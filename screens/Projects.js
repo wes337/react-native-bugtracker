@@ -36,12 +36,12 @@ export default function ProjectsScreen({ route, navigation }) {
       })
   }
 
-  renderItem = ({ item }) => (
+  renderProjects = ({ item: project }) => (
     <View style={{ borderColor: 'gray', borderWidth: 1, margin: 5, padding: 5 }}>
-      <Text>{item.title}</Text>
-      <Text>{item.descr}</Text>
-      <Button title="Go" />
-      <Button title="Delete" onPress={() => removeProject(item.id)} />
+      <Text>{project.title}</Text>
+      <Text>{project.descr}</Text>
+      <Button title="Go" onPress={() => navigation.navigate('Issues', { project })} />
+      <Button title="Delete" onPress={() => removeProject(project.id)} />
     </View>
   )
 
@@ -55,7 +55,7 @@ export default function ProjectsScreen({ route, navigation }) {
       <FlatList
         keyExtractor={item => item.id.toString()}
         data={projectList}
-        renderItem={renderItem}
+        renderItem={renderProjects}
       />
       <Button
         title="Add Project"
