@@ -54,18 +54,18 @@ export default function IssuesScreen({ route, navigation }) {
     <View>
       <Text>Issues for {project.title}</Text>
       <FlatList
-          keyExtractor={item => item.id.toString()}
-          data={issuesList}
-          renderItem={renderIssues}
-        />
-        <Button
-          title="Add Issue"
-          onPress={() => navigation.navigate('AddIssue', { project })}
-        />
-        <Button
-          title="Add Category"
-          onPress={() => navigation.navigate('AddCategory')}
-        />
+        keyExtractor={item => item.id.toString()}
+        data={issuesList}
+        renderItem={renderIssues}
+      />
+      <Button
+        title="Add Issue"
+        onPress={() => navigation.navigate('AddIssue', { project })}
+      />
+      <Button
+        title="Manage Categories"
+        onPress={() => navigation.navigate('ManageCategories', { projectId: project.id })}
+      />
     </View>
   )
 }

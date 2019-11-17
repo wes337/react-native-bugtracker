@@ -21,8 +21,9 @@ export default function AddProject({ route, navigation }) {
     const projectsRef = firebase.database().ref('projects/')
     projectsRef.push({ ...project }, () => {
       setLoading(false)
+      navigation.navigate('Projects')
     })
-    navigation.navigate('Projects')
+    .then(() => projectsRef.off())
   }
 
   if (loading) {
