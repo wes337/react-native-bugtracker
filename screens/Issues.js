@@ -41,8 +41,7 @@ export default function IssuesScreen({ route, navigation }) {
 
   return (
     <View>
-      <Text>Issues</Text>
-      <Text>{project.title}</Text>
+      <Text>Issues for {project.title}</Text>
       <FlatList
           keyExtractor={item => item.id.toString()}
           data={issuesList}

@@ -7,7 +7,14 @@ AddIssue.navigationOptions = {
 }
 
 export default function AddIssue({ route, navigation }) {
-  const [issueTitle, setIssueTitle] = useState('')
+  const [issue, setIssue] = useState({
+    title: '',
+    descr: '',
+    category: '',
+    dueDate: '',
+    importance: 0,
+    completedOn: '',
+  })
 
   const project = navigation.getParam('project', {
     id: '',
@@ -17,8 +24,9 @@ export default function AddIssue({ route, navigation }) {
   
   const addIssue = () => {
     const newIssue = {
-      title: issueTitle,
+      ...issue,
       projectId: project.id,
+      createdAt: new Date(),
     }
     firebase.database().ref('issues/' + project.id).push(
       { ...newIssue }
@@ -28,11 +36,18 @@ export default function AddIssue({ route, navigation }) {
 
   return (
     <View>
-      <Text>Add Issue to Project</Text>
+      <Text>Add Issue to {project.title}</Text>
       <TextInput
         style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
-        onChangeText={text => setIssueTitle(text)}
-        value={issueTitle}
+        onChangeText={title => setIssue({ ...issue, title })}
+        value={issue.title}
+      />
+      <TextInput
+        multiline
+        numberOfLines={4}
+        style={{ height: 150, borderColor: 'gray', borderWidth: 1 }}
+        onChangeText={descr => setIssue({ ...issue, descr })}
+        value={issue.descr}
       />
       <Button
         title="Submit"
