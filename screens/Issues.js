@@ -27,11 +27,35 @@ export default function IssuesScreen({ route, navigation }) {
       setIssuesList(issues)
       setLoading(false)
     })
+    return () => {
+      firebase.database().ref().off()
+    }
   }, [])
+
+  removeIssue = (issueId) => {
+    setLoading(true)
+    const removeIssue = firebase.database().ref(`issues/${project.id}/${issueId}`);
+    removeIssue.remove()
+      .then(() => {
+        setLoading(false)
+      })
+      .catch(err => {
+        Alert.alert("Remove failed: " + error.message)
+        setLoading(false)
+      })
+  }
 
   renderIssues = ({ item: issue }) => (
     <View style={{ borderColor: 'gray', borderWidth: 1, margin: 5, padding: 5 }}>
       <Text>{issue.title}</Text>
+      <Button
+        title="Details"
+        onPress={() => navigation.navigate('Details', { issue })}
+      />
+      <Button
+        title="Remove"
+        onPress={() => removeIssue(issue.id)}
+      />
     </View>
   )
 
