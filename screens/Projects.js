@@ -23,14 +23,31 @@ export default function ProjectsScreen({ route, navigation }) {
     })
   }, [])
 
-  const renderItem = ({ item }) => (
+  removeProject = (projectId) => {
+    setLoading(true)
+    const removeProject = firebase.database().ref(`projects/${projectId}`);
+    removeProject.remove()
+      .then(() => {
+        setLoading(false)
+      })
+      .catch(err => {
+        Alert.alert("Remove failed: " + error.message)
+        setLoading(false)
+      })
+  }
+
+  renderItem = ({ item }) => (
     <View style={{ borderColor: 'gray', borderWidth: 1, margin: 5, padding: 5 }}>
       <Text>{item.title}</Text>
       <Text>{item.descr}</Text>
       <Button title="Go" />
-      <Button title="Delete" />
+      <Button title="Delete" onPress={() => removeProject(item.id)} />
     </View>
   )
+
+  if (loading) {
+    return (<View><Text>Loading...</Text></View>)
+  }
 
   return (
     <View>
