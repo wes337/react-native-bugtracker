@@ -1,6 +1,7 @@
 import * as firebase from 'firebase'
 import React, { useState, useEffect } from 'react'
-import { View, Text, FlatList, Button } from 'react-native'
+import { View, Text, FlatList } from 'react-native'
+import { Button, ListItem } from 'react-native-elements'
 
 IssuesScreen.navigationOptions = {
   title: 'Issues',
@@ -31,26 +32,18 @@ export default function IssuesScreen({ route, navigation }) {
     return () => issuesRef.off()
   }, [])
 
-  removeIssue = (issueId) => {
-    setLoading(true)
-    const removeIssue = firebase.database().ref(`issues/${project.id}/${issueId}`);
-    removeIssue.remove(() => {
-      setLoading(false)
-    })
-  }
-
   renderIssues = ({ item: issue }) => (
-    <View style={{ borderColor: 'gray', borderWidth: 1, margin: 5, padding: 5 }}>
-      <Text>{issue.title}</Text>
-      <Button
-        title="Details"
-        onPress={() => navigation.navigate('Details', { issue })}
-      />
-      <Button
-        title="Remove"
-        onPress={() => removeIssue(issue.id)}
-      />
-    </View>
+    <ListItem
+      title={issue.title}
+      subtitle={
+        <View>
+          <Text>{issue.descr}</Text>
+        </View>
+      }
+      onPress={() => navigation.navigate('Details', { issue })}
+      bottomDivider
+      chevron
+    />
   )
 
   if (loading) {
@@ -68,6 +61,10 @@ export default function IssuesScreen({ route, navigation }) {
         <Button
           title="Add Issue"
           onPress={() => navigation.navigate('AddIssue', { project })}
+        />
+        <Button
+          title="Add Category"
+          onPress={() => navigation.navigate('AddCategory')}
         />
     </View>
   )

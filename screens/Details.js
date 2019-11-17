@@ -18,9 +18,14 @@ export default function DetailsScreen({ route, navigation }) {
     const issueRef = firebase.database().ref(`issues/${projectId}/${id}`)
     issueRef.on('value', snapshot => {
       const issueObject = snapshot.val()
-      setIssue(issueObject)
-      issueObject.completedOn && setIssueCompleted(true)
-      setLoading(false)
+      if (!issueObject) {
+        navigation.navigate('Issues')
+        return setLoading(false)
+      } else {
+        setIssue(issueObject)
+        issueObject.completedOn && setIssueCompleted(true)
+        return setLoading(false)
+      }
     })
     return () => issueRef.off()
   }, [])
@@ -33,6 +38,14 @@ export default function DetailsScreen({ route, navigation }) {
       : null
     const updateIssue = firebase.database().ref(`issues/${projectId}/${id}`)
     updateIssue.update({ completedOn }, () => {
+      setLoading(false)
+    })
+  }
+
+  removeIssue = () => {
+    setLoading(true)
+    const removeIssue = firebase.database().ref(`issues/${projectId}/${id}`);
+    removeIssue.remove(() => {
       setLoading(false)
     })
   }
@@ -54,6 +67,7 @@ export default function DetailsScreen({ route, navigation }) {
       checked={issueCompleted}
       onPress={() => setComplete(!issueCompleted)}
     />
+    <Button title="Remove" onPress={() => this.removeIssue()} />
     <Button title="Edit" />
   </View>
   )
