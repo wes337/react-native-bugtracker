@@ -27,6 +27,8 @@ export default function ProjectsScreen({ route, navigation }) {
 
   removeProject = (projectId) => {
     setLoading(true)
+    const removeProjectIssues = firebase.database().ref(`issues/${projectId}/`)
+    removeProjectIssues.remove()
     const removeProject = firebase.database().ref(`projects/${projectId}`)
     removeProject.remove(() => {
       setLoading(false)
