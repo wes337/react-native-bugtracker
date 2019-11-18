@@ -1,7 +1,8 @@
 import * as firebase from 'firebase'
-import React, { useState, useEffect } from 'react'
-import { View, Text, TextInput, Button, FlatList } from 'react-native'
+import React, { useState, useEffect, useRef } from 'react'
+import { View, Text, Button, FlatList } from 'react-native'
 import { Input, ListItem } from 'react-native-elements'
+import ColorPicker from 'simple-react-native-color-picker'
 
 ManageCategories.navigationOptions = {
   title: 'Categories',
@@ -9,12 +10,10 @@ ManageCategories.navigationOptions = {
 
 export default function ManageCategories({ route, navigation }) {
   const [loading, setLoading] = useState(false)
-  const [category, setCategory] = useState({
-    name: '',
-    color: '',
-  })
+  const [category, setCategory] = useState({})
   const [categoryList, setCategoryList] = useState('')
   const projectId = navigation.getParam('projectId')
+  const colorRef = useRef(null)
   
   useEffect(() => {
     setLoading(true)
@@ -33,8 +32,9 @@ export default function ManageCategories({ route, navigation }) {
 
   addCategory = () => {
     setLoading(true)
+    const color = colorRef.current.getColorSelected() || 'black'
     const categoriesRef = firebase.database().ref(`projects/${projectId}/categories/`)
-    categoriesRef.push({ ...category }, () => {
+    categoriesRef.push({ ...category, color }, () => {
       setLoading(false)
     })
     navigation.navigate('Categories')
@@ -51,7 +51,7 @@ export default function ManageCategories({ route, navigation }) {
   renderCategories = ({ item }) => (
     <ListItem
       title={item.name}
-      titleStyle={{ color: item.color }}
+      titleStyle={{ color: item.color || 'black' }}
       rightElement={
         <View>
           <Button title="Remove" onPress={() => removeCategory(item.id)} />
@@ -68,21 +68,22 @@ export default function ManageCategories({ route, navigation }) {
   return (
     <View>
       <Text>Categories</Text>
-      <FlatList
-        keyExtractor={item => item.id.toString()}
-        data={categoryList}
-        renderItem={renderCategories}
-      />
-      <Input
-        style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
-        onChangeText={name => setCategory({ ...category, name })}
-        value={category.name}
-      />
-      <Input
-        style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
-        onChangeText={color => setCategory({ ...category, color })}
-        value={category.color}
-      />
+      <View>
+        <FlatList
+          keyExtractor={item => item.id.toString()}
+          data={categoryList}
+          renderItem={renderCategories}
+        />
+      </View>
+      <View>
+        <Input
+          style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
+          onChangeText={name => setCategory({ ...category, name })}
+          value={category.name}
+        />
+        <Text>Color</Text>
+        <ColorPicker colors={['blue', 'red', 'green', 'yellow', 'gray']}  ref={colorRef} />
+      </View>
       <Button
         title="Submit"
         onPress={addCategory}
