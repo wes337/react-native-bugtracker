@@ -58,7 +58,7 @@ export default function DetailsScreen({ route, navigation }) {
   <View>
     <Text h2>{issue.title}</Text>
     <Text>{issue.descr}</Text>
-    <Text>{issue.category ? issue.category : 'No category'}</Text>
+    <Text>{issue.category ? issue.category.name : 'No category'}</Text>
     <Text style={{ display: issue.dueDate ? 'flex' : 'none' }}>Due on {issue.dueDate}</Text>
     <Text>Importance: {issue.importance}</Text>
     <Text style={{ display: issueCompleted ? 'flex' : 'none' }}>Completed on {issue.completedOn}</Text>

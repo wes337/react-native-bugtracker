@@ -40,7 +40,7 @@ export default function ManageCategories({ route, navigation }) {
     navigation.navigate('Categories')
   }
 
-  removeCategory = (categoryId) => {
+  removeCategory = categoryId => {
     setLoading(true)
     const removeCategory = firebase.database().ref(`projects/${projectId}/categories/${categoryId}`);
     removeCategory.remove(() => {
