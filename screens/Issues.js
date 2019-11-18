@@ -40,7 +40,7 @@ export default function IssuesScreen({ route, navigation }) {
           <Text>{issue.descr}</Text>
         </View>
       }
-      onPress={() => navigation.navigate('Details', { issue })}
+      onPress={() => navigation.navigate('Details', { project, issue })}
       bottomDivider
       chevron
     />
@@ -60,7 +60,7 @@ export default function IssuesScreen({ route, navigation }) {
       />
       <Button
         title="Add Issue"
-        onPress={() => navigation.navigate('AddIssue', { project })}
+        onPress={() => navigation.navigate('AddEditIssue', { project })}
       />
       <Button
         title="Manage Categories"

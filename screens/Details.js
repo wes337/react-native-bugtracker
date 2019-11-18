@@ -11,11 +11,12 @@ export default function DetailsScreen({ route, navigation }) {
   const [loading, setLoading] = useState(false)
   const [issueCompleted, setIssueCompleted] = useState(false)
   const [issue, setIssue] = useState({})
-  const { id, projectId } = navigation.getParam('issue')
+  const { id } = navigation.getParam('issue')
+  const project = navigation.getParam('project')
 
   useEffect(() => {
     setLoading(true)
-    const issueRef = firebase.database().ref(`issues/${projectId}/${id}`)
+    const issueRef = firebase.database().ref(`issues/${project.id}/${id}`)
     issueRef.on('value', snapshot => {
       const issueObject = snapshot.val()
       if (!issueObject) {
@@ -36,7 +37,7 @@ export default function DetailsScreen({ route, navigation }) {
     const completedOn = complete
       ? new Date()
       : null
-    const updateIssue = firebase.database().ref(`issues/${projectId}/${id}`)
+    const updateIssue = firebase.database().ref(`issues/${project.id}/${id}`)
     updateIssue.update({ completedOn }, () => {
       setLoading(false)
     })
@@ -44,7 +45,7 @@ export default function DetailsScreen({ route, navigation }) {
 
   removeIssue = () => {
     setLoading(true)
-    const removeIssue = firebase.database().ref(`issues/${projectId}/${id}`);
+    const removeIssue = firebase.database().ref(`issues/${project.id}/${id}`);
     removeIssue.remove(() => {
       setLoading(false)
     })
@@ -63,12 +64,12 @@ export default function DetailsScreen({ route, navigation }) {
     <Text>Importance: {issue.importance}</Text>
     <Text style={{ display: issueCompleted ? 'flex' : 'none' }}>Completed on {issue.completedOn}</Text>
     <CheckBox
-      title='Mark as complete'
+      title='Complete'
       checked={issueCompleted}
       onPress={() => setComplete(!issueCompleted)}
     />
     <Button title="Remove" onPress={() => this.removeIssue()} />
-    <Button title="Edit" />
+    <Button title="Edit" onPress={() => navigation.navigate('AddEditIssue', { project, issue: { id, ...issue } })} />
   </View>
   )
 }

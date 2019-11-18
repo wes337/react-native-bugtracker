@@ -9,18 +9,18 @@ AddIssue.navigationOptions = {
 }
 
 export default function AddIssue({ route, navigation }) {
+  const project = navigation.getParam('project')
+  const editIssue = navigation.getParam('issue')
   const [loading, setLoading] = useState(false)
   const [categoriesList, setCategoriesList] = useState([])
   const [issue, setIssue] = useState({
-    title: '',
-    descr: '',
-    category: null,
-    dueDate: new Date(),
-    importance: 3,
-    completedOn: null,
+    title: editIssue && editIssue.title || '',
+    descr: editIssue && editIssue.descr || '',
+    category: editIssue && editIssue.category || null,
+    dueDate: editIssue && editIssue.dueDate || new Date(),
+    importance: editIssue && editIssue.importance || 3,
+    completedOn: editIssue && editIssue.completedOn || null,
   })
-
-  const project = navigation.getParam('project')
 
   useEffect(() => {
     setLoading(true)
@@ -51,6 +51,15 @@ export default function AddIssue({ route, navigation }) {
     })
   }
 
+  updateIssue = () => {
+    setLoading(true)
+    const issueRef = firebase.database().ref(`issues/${project.id}/${editIssue.id}`)
+    issueRef.update({ ...issue }, () => {
+      setLoading(false)
+      navigation.navigate('Issues')
+    })
+  }
+
   pickerCategories = () => categoriesList.map(category => (
     <Picker.Item label={category.name} value={category} key={category.id} />
   ))
@@ -61,7 +70,7 @@ export default function AddIssue({ route, navigation }) {
 
   return (
     <View>
-      <Text h3>Add Issue to {project.title}</Text>
+      <Text h3>{editIssue ? 'Edit' : 'Add'} Issue in {project.title}</Text>
       <Input
         label="Title"
         style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
@@ -101,8 +110,8 @@ export default function AddIssue({ route, navigation }) {
       </Picker>
       <Text>Importance: {issue.importance}</Text>
       <Button
-        title="Submit"
-        onPress={addIssue}
+        title={editIssue ? 'Update' : 'Submit'}
+        onPress={editIssue ? updateIssue : addIssue}
       />
     </View>
   )
