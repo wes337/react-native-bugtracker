@@ -1,7 +1,7 @@
 import * as firebase from 'firebase'
 import React, { useState, useEffect } from 'react'
 import { View, Text, FlatList } from 'react-native'
-import { Button, ListItem } from 'react-native-elements'
+import { Button, ListItem, ButtonGroup } from 'react-native-elements'
 
 IssuesScreen.navigationOptions = {
   title: 'Issues',
@@ -10,6 +10,8 @@ IssuesScreen.navigationOptions = {
 export default function IssuesScreen({ route, navigation }) {
   const [loading, setLoading] = useState(false)
   const [issuesList, setIssuesList] = useState([])
+  const [filteredIssuesList, setFilteredIssuesList] = useState([])
+  const [filter, setFilter] = useState(0)
 
   const project = navigation.getParam('project', {
     id: '',
@@ -27,10 +29,19 @@ export default function IssuesScreen({ route, navigation }) {
         id => issues.push({ id, ...data[id] })
       )
       setIssuesList(issues)
+      filterList(0)
       setLoading(false)
     })
     return () => issuesRef.off()
   }, [])
+
+  filterList = (filterBy) => {
+    setFilter(filterBy)
+    const filteredList = filterBy === 0
+      ? issuesList.filter(issue => !issue.completedOn)
+      : issuesList.filter(issue => issue.completedOn)
+    setFilteredIssuesList(filteredList)
+  }
 
   renderIssues = ({ item: issue }) => (
     <ListItem
@@ -53,9 +64,14 @@ export default function IssuesScreen({ route, navigation }) {
   return (
     <View>
       <Text>Issues for {project.title}</Text>
+      <ButtonGroup
+        onPress={filterBy => filterList(filterBy)}
+        selectedIndex={filter}
+        buttons={['Incomplete', 'Completed']}
+      />
       <FlatList
         keyExtractor={item => item.id.toString()}
-        data={issuesList}
+        data={filteredIssuesList}
         renderItem={renderIssues}
       />
       <Button
