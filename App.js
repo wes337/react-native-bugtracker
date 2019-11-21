@@ -8,6 +8,7 @@ import Details from './screens/Details'
 import AddProject from './screens/AddProject'
 import AddEditIssue from './screens/AddEditIssue'
 import ManageCategories from './screens/ManageCategories'
+import ManageMilestones from './screens/ManageMilestones'
 
 // Your web app's Firebase configuration
 var firebaseConfig = {
@@ -29,6 +30,7 @@ const AppNavigator = createStackNavigator({
   AddProject,
   AddEditIssue,
   ManageCategories,
+  ManageMilestones,
 },
 {
   initialRouteName: 'Projects',

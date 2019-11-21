@@ -81,12 +81,16 @@ export default function IssuesScreen({ route, navigation }) {
         renderItem={renderIssues}
       />
       <Button
-        title="Add Issue"
+        title="New Issue"
         onPress={() => navigation.navigate('AddEditIssue', { project })}
       />
       <Button
-        title="Manage Categories"
+        title="Categories"
         onPress={() => navigation.navigate('ManageCategories', { projectId: project.id })}
+      />
+      <Button
+        title="Milestones"
+        onPress={() => navigation.navigate('ManageMilestones', { projectId: project.id })}
       />
     </View>
   )

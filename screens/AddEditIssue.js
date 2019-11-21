@@ -60,9 +60,17 @@ export default function AddIssue({ route, navigation }) {
     })
   }
 
-  pickerCategories = () => categoriesList.map(category => (
-    <Picker.Item label={category.name} value={category.id} key={category.id} />
-  ))
+  const ItemPicker = ({item, itemList}) => (
+    <Picker
+      selectedValue={issue[item]}
+      onValueChange={itemValue => setIssue({ ...issue, [item]: itemValue })}
+    >
+      {itemList.map(item => (
+        <Picker.Item label={item.name} value={item.id} key={item.id} />
+      ))}
+      <Picker.Item label="None" value={null} />
+    </Picker>
+  )
 
   if (loading) {
     return <View><Text>Loading...</Text></View>
@@ -101,13 +109,7 @@ export default function AddIssue({ route, navigation }) {
         minimumValue={1}
         maximumValue={5}
       />
-      <Picker
-        selectedValue={issue.category}
-        onValueChange={category => setIssue({ ...issue, category })}
-      >
-        {pickerCategories()}
-        <Picker.Item label="None" value={null} />
-      </Picker>
+      <ItemPicker item="category" itemList={categoriesList} />
       <Text>Importance: {issue.importance}</Text>
       <Button
         title={editIssue ? 'Update' : 'Submit'}

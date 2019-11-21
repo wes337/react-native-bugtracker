@@ -36,8 +36,7 @@ export default function ManageCategories({ route, navigation }) {
     const categoriesRef = firebase.database().ref(`projects/${projectId}/categories/`)
     categoriesRef.push({ ...category, color }, () => {
       setLoading(false)
-    })
-    navigation.navigate('Categories')
+    }).then(() => setCategory({}))
   }
 
   removeCategory = categoryId => {
