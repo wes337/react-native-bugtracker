@@ -1,7 +1,7 @@
 import * as firebase from 'firebase'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import { View, Text, FlatList } from 'react-native'
-import { Button, ListItem, ButtonGroup } from 'react-native-elements'
+import { Button, ListItem, ButtonGroup, SearchBar } from 'react-native-elements'
 
 IssuesScreen.navigationOptions = {
   title: 'Issues',
@@ -9,8 +9,8 @@ IssuesScreen.navigationOptions = {
 
 export default function IssuesScreen({ route, navigation }) {
   const [loading, setLoading] = useState(false)
+  const [search, setSearch] = useState('')
   const [issuesList, setIssuesList] = useState([])
-  const [filteredIssuesList, setFilteredIssuesList] = useState([])
   const [filter, setFilter] = useState(0)
 
   const project = navigation.getParam('project', {
@@ -29,29 +29,10 @@ export default function IssuesScreen({ route, navigation }) {
         id => issues.push({ id, ...data[id] })
       )
       setIssuesList(issues)
-      filterList(0)
       setLoading(false)
     })
     return () => issuesRef.off()
   }, [])
-
-  filterList = (filterBy) => {
-    setFilter(filterBy)
-    switch(filterBy) {
-      case 0:
-          setFilteredIssuesList(issuesList.filter(issue => !issue.completedOn))
-        break
-      case 1:
-          setFilteredIssuesList(issuesList.filter(issue => issue.completedOn))
-        break
-      case 2:
-          setFilteredIssuesList(issuesList)
-          break
-      default:
-          setFilteredIssuesList(issuesList.filter(issue => !issue.completedOn))
-          break
-    }
-  }
 
   renderIssues = ({ item: issue }) => (
     <ListItem
@@ -67,6 +48,15 @@ export default function IssuesScreen({ route, navigation }) {
     />
   )
 
+  const filteredIssuesList = useMemo(() => {
+    const searchRegex = search && new RegExp(`${search}`, "gi")
+    return issuesList.filter(issue => 
+      (!searchRegex || searchRegex.test(issue.title)) &&
+      (filter !== 0 || !issue.completedOn) &&
+      (filter !== 1 || issue.completedOn)
+    )
+  }, [search, issuesList, filter])
+
   if (loading) {
     return (<View><Text>Loading...</Text></View>)
   }
@@ -74,8 +64,13 @@ export default function IssuesScreen({ route, navigation }) {
   return (
     <View>
       <Text>Issues for {project.title}</Text>
+      <SearchBar
+        placeholder="Type Here..."
+        onChangeText={key => setSearch(key)}
+        value={search}
+      />
       <ButtonGroup
-        onPress={filterBy => filterList(filterBy)}
+        onPress={filter => setFilter(filter)}
         selectedIndex={filter}
         buttons={['Incomplete', 'Completed', 'All']}
       />
