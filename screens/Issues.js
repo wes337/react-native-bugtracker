@@ -37,10 +37,20 @@ export default function IssuesScreen({ route, navigation }) {
 
   filterList = (filterBy) => {
     setFilter(filterBy)
-    const filteredList = filterBy === 0
-      ? issuesList.filter(issue => !issue.completedOn)
-      : issuesList.filter(issue => issue.completedOn)
-    setFilteredIssuesList(filteredList)
+    switch(filterBy) {
+      case 0:
+          setFilteredIssuesList(issuesList.filter(issue => !issue.completedOn))
+        break
+      case 1:
+          setFilteredIssuesList(issuesList.filter(issue => issue.completedOn))
+        break
+      case 2:
+          setFilteredIssuesList(issuesList)
+          break
+      default:
+          setFilteredIssuesList(issuesList.filter(issue => !issue.completedOn))
+          break
+    }
   }
 
   renderIssues = ({ item: issue }) => (
@@ -67,7 +77,7 @@ export default function IssuesScreen({ route, navigation }) {
       <ButtonGroup
         onPress={filterBy => filterList(filterBy)}
         selectedIndex={filter}
-        buttons={['Incomplete', 'Completed']}
+        buttons={['Incomplete', 'Completed', 'All']}
       />
       <FlatList
         keyExtractor={item => item.id.toString()}
