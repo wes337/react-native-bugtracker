@@ -61,7 +61,7 @@ export default function AddIssue({ route, navigation }) {
   }
 
   pickerCategories = () => categoriesList.map(category => (
-    <Picker.Item label={category.name} value={category} key={category.id} />
+    <Picker.Item label={category.name} value={category.id} key={category.id} />
   ))
 
   if (loading) {

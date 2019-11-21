@@ -10,6 +10,7 @@ DetailsScreen.navigationOptions = {
 export default function DetailsScreen({ route, navigation }) {
   const [loading, setLoading] = useState(false)
   const [issueCompleted, setIssueCompleted] = useState(false)
+  const [category, setCategory] = useState(null)
   const [issue, setIssue] = useState({})
   const { id } = navigation.getParam('issue')
   const project = navigation.getParam('project')
@@ -30,6 +31,17 @@ export default function DetailsScreen({ route, navigation }) {
     })
     return () => issueRef.off()
   }, [])
+
+  useEffect(() => {
+    getCategory()
+  }, [issue])
+
+  getCategory = () => {
+    const categoryRef = firebase.database().ref(`projects/${project.id}/categories/${issue.category}`)
+    categoryRef.on('value', snapshot => {
+      setCategory(snapshot.val())
+    })
+  }
 
   setComplete = complete => {
     setLoading(true)
@@ -59,7 +71,7 @@ export default function DetailsScreen({ route, navigation }) {
   <View>
     <Text h2>{issue.title}</Text>
     <Text>{issue.descr}</Text>
-    <Text>{issue.category ? issue.category.name : 'No category'}</Text>
+    <Text>{category ? category.name : 'No category'}</Text>
     <Text style={{ display: issue.dueDate ? 'flex' : 'none' }}>Due on {issue.dueDate}</Text>
     <Text>Importance: {issue.importance}</Text>
     <Text style={{ display: issueCompleted ? 'flex' : 'none' }}>Completed on {issue.completedOn}</Text>
