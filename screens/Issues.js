@@ -68,6 +68,7 @@ export default function IssuesScreen({ route, navigation }) {
         placeholder="Type Here..."
         onChangeText={key => setSearch(key)}
         value={search}
+        lightTheme
       />
       <ButtonGroup
         onPress={filter => setFilter(filter)}
