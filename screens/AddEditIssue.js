@@ -1,8 +1,11 @@
 import * as firebase from 'firebase'
-import React, { useState, useEffect } from 'react'
-import { View, Picker } from 'react-native'
+import React, { useState, useEffect, useMemo } from 'react'
+import { View } from 'react-native'
 import DatePicker from 'react-native-datepicker'
 import { Text, Input, Button, Slider } from 'react-native-elements'
+import { Container, Header, Content, Form, Item, Picker, Icon } from 'native-base'
+import { getCategories, getMilestones } from '../models/ProjectDAO'
+import { addIssue, updateIssue } from '../models/IssueDAO'
 
 AddIssue.navigationOptions = {
   title: 'Add Issue',
@@ -11,65 +14,66 @@ AddIssue.navigationOptions = {
 export default function AddIssue({ route, navigation }) {
   const project = navigation.getParam('project')
   const editIssue = navigation.getParam('issue')
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
   const [categoriesList, setCategoriesList] = useState([])
+  const [milestoneList, setMilestoneList] = useState([])
   const [issue, setIssue] = useState({
     title: editIssue && editIssue.title || '',
     descr: editIssue && editIssue.descr || '',
     category: editIssue && editIssue.category || null,
+    miletone: editIssue && editIssue.milestone || null,
     dueDate: editIssue && editIssue.dueDate || new Date(),
     importance: editIssue && editIssue.importance || 3,
     completedOn: editIssue && editIssue.completedOn || null,
   })
 
-  useEffect(() => {
+  useState(() => {
     setLoading(true)
-    const categoriesRef = firebase.database().ref(`projects/${project.id}/categories/`)
-    categoriesRef.on('value', snapshot => {
-      const data = snapshot.val()
-      const categories = []
-      data && Object.keys(data) && Object.keys(data).map(
-        id => categories.push({ id, ...data[id] })
-      )
-      setCategoriesList(categories)
-      setLoading(false)
-    })
-    return () => categoriesRef.off()
+    Promise.all([getCategories(project.id), getMilestones(project.id)])
+      .then(([categories, milestones]) => {
+        setCategoriesList(categories)
+        setMilestoneList(milestones)
+        setLoading(false)
+      })
   }, [])
   
-  addIssue = () => {
+  this.addIssue = () => {
     setLoading(true)
-    const newIssue = {
+    Promise.resolve(addIssue({
       ...issue,
       projectId: project.id,
       createdAt: new Date(),
-    }
-    const issueRef = firebase.database().ref(`issues/${project.id}/`)
-    issueRef.push({ ...newIssue }, () => {
+    })).then(() => {
       setLoading(false)
       navigation.navigate('Issues')
     })
   }
 
-  updateIssue = () => {
+  this.updateIssue = () => {
     setLoading(true)
-    const issueRef = firebase.database().ref(`issues/${project.id}/${editIssue.id}`)
-    issueRef.update({ ...issue }, () => {
+    Promise.resolve(updateIssue(issue)).then(() => {
       setLoading(false)
       navigation.navigate('Issues')
     })
   }
 
   const ItemPicker = ({item, itemList}) => (
-    <Picker
-      selectedValue={issue[item]}
-      onValueChange={itemValue => setIssue({ ...issue, [item]: itemValue })}
-    >
-      {itemList.map(item => (
-        <Picker.Item label={item.name} value={item.id} key={item.id} />
-      ))}
-      <Picker.Item label="None" value={null} />
-    </Picker>
+    <Item picker>
+      <Picker
+        mode="dropdown"
+        iosIcon={<Icon name="arrow-down" />}
+        placeholder={issue[item] && issue[item].name || 'None'}
+        placeholderStyle={{ color: "#bfc6ea" }}
+        placeholderIconColor="#007aff"
+        selectedValue={issue[item]}
+        onValueChange={itemValue => setIssue({ ...issue, [item]: itemValue })}
+      >
+        {itemList.map(item => (
+          <Picker.Item label={item.name} value={item.id} key={item.id} />
+        ))}
+        <Picker.Item label="None" value={null} />
+      </Picker>
+    </Item>
   )
 
   if (loading) {
@@ -110,10 +114,11 @@ export default function AddIssue({ route, navigation }) {
         maximumValue={5}
       />
       <ItemPicker item="category" itemList={categoriesList} />
+      <ItemPicker item="milestone" itemList={milestoneList} />
       <Text>Importance: {issue.importance}</Text>
       <Button
         title={editIssue ? 'Update' : 'Submit'}
-        onPress={editIssue ? updateIssue : addIssue}
+        onPress={editIssue ? this.updateIssue : this.addIssue}
       />
     </View>
   )

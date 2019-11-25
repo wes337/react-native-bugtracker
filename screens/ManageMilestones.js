@@ -34,7 +34,6 @@ export default function ManageMilestones({ route, navigation }) {
     milestonesRef.push({ ...milestone }, () => {
       setLoading(false)
     }).then(() => setMilestone({}))
-    
   }
 
   removeMilestone = categoryId => {

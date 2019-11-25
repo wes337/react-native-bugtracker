@@ -2,6 +2,8 @@ import * as firebase from 'firebase'
 import React, { useState, useEffect } from 'react'
 import { View } from 'react-native'
 import { Text, Button, CheckBox } from 'react-native-elements'
+import { getIssue, updateIssue } from '../models/IssueDAO'
+import { getCategory } from '../models/ProjectDAO'
 
 DetailsScreen.navigationOptions = {
   title: 'Details',
@@ -17,9 +19,7 @@ export default function DetailsScreen({ route, navigation }) {
 
   useEffect(() => {
     setLoading(true)
-    const issueRef = firebase.database().ref(`issues/${project.id}/${id}`)
-    issueRef.on('value', snapshot => {
-      const issueObject = snapshot.val()
+    Promise.resolve(getIssue(project.id, id)).then(issueObject => {
       if (!issueObject) {
         navigation.navigate('Issues')
         return setLoading(false)
@@ -29,19 +29,15 @@ export default function DetailsScreen({ route, navigation }) {
         return setLoading(false)
       }
     })
-    return () => issueRef.off()
   }, [])
 
   useEffect(() => {
-    getCategory()
-  }, [issue])
+    Promise.resolve(getCategory(project.id, issue.category)).then(category =>
+      setCategory(category)
+    )
 
-  getCategory = () => {
-    const categoryRef = firebase.database().ref(`projects/${project.id}/categories/${issue.category}`)
-    categoryRef.on('value', snapshot => {
-      setCategory(snapshot.val())
-    })
-  }
+    console.log(issue.completedOn)
+  }, [issue])
 
   setComplete = complete => {
     setLoading(true)
@@ -49,10 +45,8 @@ export default function DetailsScreen({ route, navigation }) {
     const completedOn = complete
       ? new Date()
       : null
-    const updateIssue = firebase.database().ref(`issues/${project.id}/${id}`)
-    updateIssue.update({ completedOn }, () => {
-      setLoading(false)
-    })
+    Promise.resolve(updateIssue({ id, projectId: project.id, completedOn}))
+      .then(() => setLoading(false))
   }
 
   removeIssue = () => {
