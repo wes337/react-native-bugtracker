@@ -4,7 +4,8 @@ import { View } from 'react-native'
 import DatePicker from 'react-native-datepicker'
 import { Text, Input, Button, Slider } from 'react-native-elements'
 import { Container, Header, Content, Form, Item, Picker, Icon } from 'native-base'
-import { getCategories, getMilestones } from '../models/ProjectDAO'
+import { getCategories } from '../models/CategoryDAO'
+import { getMilestones } from '../models/MilestoneDAO'
 import { addIssue, updateIssue } from '../models/IssueDAO'
 
 AddIssue.navigationOptions = {
@@ -21,7 +22,7 @@ export default function AddIssue({ route, navigation }) {
     title: editIssue && editIssue.title || '',
     descr: editIssue && editIssue.descr || '',
     category: editIssue && editIssue.category || null,
-    miletone: editIssue && editIssue.milestone || null,
+    milestone: editIssue && editIssue.milestone || null,
     dueDate: editIssue && editIssue.dueDate || new Date(),
     importance: editIssue && editIssue.importance || 3,
     completedOn: editIssue && editIssue.completedOn || null,

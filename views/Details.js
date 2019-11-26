@@ -1,9 +1,9 @@
-import * as firebase from 'firebase'
 import React, { useState, useEffect } from 'react'
 import { View } from 'react-native'
 import { Text, Button, CheckBox } from 'react-native-elements'
 import { getIssue, updateIssue, removeIssue } from '../models/IssueDAO'
-import { getCategory } from '../models/ProjectDAO'
+import { getCategory } from '../models/CategoryDAO'
+import { getMilestone } from '../models/MilestoneDAO'
 
 DetailsScreen.navigationOptions = {
   title: 'Details',
@@ -14,6 +14,7 @@ export default function DetailsScreen({ route, navigation }) {
   const [issue, setIssue] = useState({})
   const [completedOn, setCompletedOn] = useState(false)
   const [category, setCategory] = useState(null)
+  const [milestone, setMilestone] = useState(null)
   const { id } = navigation.getParam('issue')
   const project = navigation.getParam('project')
 
@@ -21,10 +22,15 @@ export default function DetailsScreen({ route, navigation }) {
     Promise.resolve(getIssue(project.id, id)).then(issue => {
       setIssue(issue)
       setCompletedOn(issue.completedOn || false)
-      Promise.resolve(getCategory(project.id, issue.category)).then(category => {
-        setCategory(category)
-        setLoading(false)
-      })
+      Promise.all([
+        getCategory(project.id, issue.category),
+        getMilestone(project.id, issue.milestone)
+      ])
+        .then(([category, milestone]) => {
+          setCategory(category)
+          setMilestone(milestone)
+          setLoading(false)
+        })
     })
   }, [])
 
@@ -51,6 +57,7 @@ export default function DetailsScreen({ route, navigation }) {
   <View>
     <Text h2>{issue.title}</Text>
     <Text>{issue.descr}</Text>
+    <Text style={{ display: milestone ? 'flex' : 'none' }}>{milestone && milestone.name}</Text>
     <Text>{category ? category.name : 'No category'}</Text>
     <Text style={{ display: issue.dueDate ? 'flex' : 'none' }}>Due on {issue.dueDate}</Text>
     <Text>Importance: {issue.importance}</Text>

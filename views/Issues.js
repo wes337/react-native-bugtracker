@@ -2,7 +2,6 @@ import * as firebase from 'firebase'
 import React, { useState, useEffect, useMemo } from 'react'
 import { View, Text, FlatList } from 'react-native'
 import { Button, ListItem, ButtonGroup, SearchBar } from 'react-native-elements'
-import { getIssues } from '../models/IssueDAO'
 
 IssuesScreen.navigationOptions = {
   title: 'Issues',

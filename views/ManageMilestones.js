@@ -1,19 +1,20 @@
 import * as firebase from 'firebase'
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useMemo } from 'react'
 import { View, Text, Button, FlatList } from 'react-native'
 import { Input, ListItem } from 'react-native-elements'
+import { addMilestone, removeMilestone } from '../models/MilestoneDAO'
 
 ManageMilestones.navigationOptions = {
   title: 'Milestones',
 }
 
 export default function ManageMilestones({ route, navigation }) {
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(false)
   const [milestone, setMilestone] = useState({})
-  const [milestoneList, setMilestoneList] = useState('')
+  const [milestoneList, setMilestoneList] = useState([])
   const projectId = navigation.getParam('projectId')
   
-  useEffect(() => {
+  useState(() => {
     const milestonesRef = firebase.database().ref(`projects/${projectId}/milestones/`)
     milestonesRef.on('value', snapshot => {
       const data = snapshot.val()
@@ -25,22 +26,21 @@ export default function ManageMilestones({ route, navigation }) {
       setLoading(false)
     })
     return () => milestonesRef.off()
-  }, [])
+  },[])
 
-  addMilestone = () => {
+  this.addMilestone = () => {
     setLoading(true)
-    const milestonesRef = firebase.database().ref(`projects/${projectId}/milestones/`)
-    milestonesRef.push({ ...milestone }, () => {
+    Promise.resolve(addMilestone(projectId, milestone)).then(() => {
       setLoading(false)
-    }).then(() => setMilestone({}))
+      setMilestone({})
+    })
   }
 
-  removeMilestone = categoryId => {
+  this.removeMilestone = milestoneId => {
     setLoading(true)
-    const removeMilestone = firebase.database().ref(`projects/${projectId}/milestones/${categoryId}`);
-    removeMilestone.remove(() => {
+    Promise.resolve(removeMilestone(projectId, milestoneId)).then(() =>
       setLoading(false)
-    })
+    )
   }
 
   renderMilestones = ({ item }) => (
@@ -48,7 +48,7 @@ export default function ManageMilestones({ route, navigation }) {
       title={item.name}
       rightElement={
         <View>
-          <Button title="Remove" onPress={() => removeMilestone(item.id)} />
+          <Button title="Remove" onPress={() => this.removeMilestone(item.id)} />
         </View>
       }
       bottomDivider
@@ -78,7 +78,7 @@ export default function ManageMilestones({ route, navigation }) {
       </View>
       <Button
         title="Submit"
-        onPress={addMilestone}
+        onPress={this.addMilestone}
       />
     </View>
   )
