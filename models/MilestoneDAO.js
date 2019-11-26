@@ -1,4 +1,5 @@
 import * as firebase from 'firebase'
+import { getIssues } from './IssueDAO'
 
 export function getMilestones(projectId) {
   const milestonesRef = firebase.database().ref(`projects/${projectId}/milestones/`)
@@ -29,4 +30,12 @@ export function addMilestone(projectId, milestone) {
 export function removeMilestone(projectId, milestoneId) {
   const milestoneRef = firebase.database().ref(`projects/${projectId}/milestones/${milestoneId}`);
   milestoneRef.remove()
+}
+
+export function getMilestoneIssues(projectId, milestoneId) {
+  const milestoneIssues = Promise.resolve(getIssues(projectId))
+    .then(issues => issues.filter(issue => 
+        issue.milestone && issue.milestone === milestoneId
+      ))
+  return milestoneIssues
 }

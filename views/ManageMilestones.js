@@ -2,7 +2,7 @@ import * as firebase from 'firebase'
 import React, { useState, useEffect, useRef, useMemo } from 'react'
 import { View, Text, Button, FlatList } from 'react-native'
 import { Input, ListItem } from 'react-native-elements'
-import { addMilestone, removeMilestone } from '../models/MilestoneDAO'
+import { addMilestone, removeMilestone, getMilestoneIssues } from '../models/MilestoneDAO'
 
 ManageMilestones.navigationOptions = {
   title: 'Milestones',
@@ -43,17 +43,20 @@ export default function ManageMilestones({ route, navigation }) {
     )
   }
 
-  renderMilestones = ({ item }) => (
-    <ListItem
-      title={item.name}
-      rightElement={
-        <View>
-          <Button title="Remove" onPress={() => this.removeMilestone(item.id)} />
-        </View>
-      }
-      bottomDivider
-    />
-  )
+  renderMilestones = ({ item }) => {
+    return (
+      <ListItem
+        title={item.name}
+        subtitle="Test"
+        rightElement={
+          <View>
+            <Button title="Remove" onPress={() => this.removeMilestone(item.id)} />
+          </View>
+        }
+        bottomDivider
+      />
+    )
+  }
 
   if (loading) {
     return <View><Text>Loading...</Text></View>
