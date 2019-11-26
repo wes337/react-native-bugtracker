@@ -31,7 +31,6 @@ export default function IssuesScreen({ route, navigation }) {
       setIssuesList(issues)
       setLoading(false)
     })
-    return () => issuesRef.off()
   }, [])
 
   renderIssues = ({ item: issue }) => (

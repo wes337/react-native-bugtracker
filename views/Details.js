@@ -30,7 +30,7 @@ export default function DetailsScreen({ route, navigation }) {
 
   useEffect(() => {
     setLoading(true)
-    Promise.resolve(updateIssue({ ...issue, completedOn })).then(() =>
+    Promise.resolve(updateIssue({ ...issue, id, completedOn })).then(() =>
       setLoading(false)
     )
   }, [completedOn])

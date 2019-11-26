@@ -21,17 +21,17 @@ export function getIssues(projectId) {
   return issues
 }
 
-export const addIssue = issue => {
+export function addIssue(issue) {
   const issueRef = firebase.database().ref(`issues/${issue.projectId}/`)
   issueRef.push({ ...issue })
 }
 
-export const updateIssue = issue => {
+export function updateIssue(issue) {
   const issueRef = firebase.database().ref(`issues/${issue.projectId}/${issue.id}`)
   issueRef.update({ ...issue })
 }
 
-export const removeIssue = issue => {
+export function removeIssue(issue) {
   const issueRef = firebase.database().ref(`issues/${issue.projectId}/${issue.id}`)
   issueRef.remove()
 }

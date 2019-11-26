@@ -103,10 +103,10 @@ export default function AddIssue({ route, navigation }) {
         onDateChange={dueDate => setIssue({ ...issue, dueDate })}
         confirmBtnText="Confirm"
         cancelBtnText="Cancel"
-        placeholder="Due date"
         format="DD-MM-YYYY"
         style={{ width: '100%' }}
       />
+      <Text>Importance: {issue.importance}</Text>
       <Slider
         value={issue.importance}
         onValueChange={importance => setIssue({ ...issue, importance: Math.round(importance) })}
@@ -115,7 +115,6 @@ export default function AddIssue({ route, navigation }) {
       />
       <ItemPicker item="category" itemList={categoriesList} />
       <ItemPicker item="milestone" itemList={milestoneList} />
-      <Text>Importance: {issue.importance}</Text>
       <Button
         title={editIssue ? 'Update' : 'Submit'}
         onPress={editIssue ? this.updateIssue : this.addIssue}

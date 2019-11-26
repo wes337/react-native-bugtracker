@@ -3,6 +3,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import { View, Text, Button, FlatList } from 'react-native'
 import { Input, ListItem } from 'react-native-elements'
 import ColorPicker from 'simple-react-native-color-picker'
+import { addCategory, removeCategory } from '../models/ProjectDAO'
 
 ManageCategories.navigationOptions = {
   title: 'Categories',
@@ -18,32 +19,32 @@ export default function ManageCategories({ route, navigation }) {
   useEffect(() => {
     const categoriesRef = firebase.database().ref(`projects/${projectId}/categories/`)
     categoriesRef.on('value', snapshot => {
-      const data = snapshot.val()
       const categories = []
+      const data = snapshot.val()
       data && Object.keys(data) && Object.keys(data).map(
         id => categories.push({ id, ...data[id] })
       )
       setCategoryList(categories)
       setLoading(false)
     })
-    return () => categoriesRef.off()
+      return () => categoriesRef.off()
   }, [])
 
-  addCategory = () => {
+  this.addCategory = () => {
     setLoading(true)
     const color = colorRef.current.getColorSelected() || 'black'
-    const categoriesRef = firebase.database().ref(`projects/${projectId}/categories/`)
-    categoriesRef.push({ ...category, color }, () => {
-      setLoading(false)
-    }).then(() => setCategory({}))
+    Promise.resolve(addCategory(projectId, { ...category, color }))
+      .then(() => {
+        setLoading(false)
+        setCategory({})
+      })
   }
 
-  removeCategory = categoryId => {
+  this.removeCategory = categoryId => {
     setLoading(true)
-    const removeCategory = firebase.database().ref(`projects/${projectId}/categories/${categoryId}`);
-    removeCategory.remove(() => {
+    Promise.resolve(removeCategory(projectId, categoryId)).then(() =>
       setLoading(false)
-    })
+    )
   }
 
   renderCategories = ({ item }) => (
@@ -52,7 +53,7 @@ export default function ManageCategories({ route, navigation }) {
       titleStyle={{ color: item.color || 'black' }}
       rightElement={
         <View>
-          <Button title="Remove" onPress={() => removeCategory(item.id)} />
+          <Button title="Remove" onPress={() => this.removeCategory(item.id)} />
         </View>
       }
       bottomDivider
@@ -84,7 +85,7 @@ export default function ManageCategories({ route, navigation }) {
       </View>
       <Button
         title="Submit"
-        onPress={addCategory}
+        onPress={this.addCategory}
       />
     </View>
   )

@@ -1,28 +1,28 @@
 import * as firebase from 'firebase'
 import React, { useState, useEffect } from 'react'
 import { View, Text, TextInput, Button } from 'react-native'
+import { addProject } from '../models/ProjectDAO'
 
 AddProject.navigationOptions = {
   title: 'Add Project',
 }
 
 export default function AddProject({ route, navigation }) {
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(false)
   const [projectTitle, setProjectTitle] = useState('')
   const [projectDescr, setProjectDescr] = useState('')
   
-  const addProject = () => {
+  this.addProject = () => {
+    setLoading(true)
     const project = {
       title: projectTitle,
       descr: projectDescr,
       createdAt: new Date(),
     }
-    const projectsRef = firebase.database().ref('projects/')
-    projectsRef.push({ ...project }, () => {
+    Promise.resolve(addProject(project)).then(() => {
       setLoading(false)
       navigation.navigate('Projects')
     })
-    .then(() => projectsRef.off())
   }
 
   if (loading) {
@@ -46,7 +46,7 @@ export default function AddProject({ route, navigation }) {
       />
       <Button
         title="Submit"
-        onPress={addProject}
+        onPress={this.addProject}
       />
     </View>
   )

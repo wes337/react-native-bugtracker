@@ -1,6 +1,6 @@
 import * as firebase from 'firebase'
 
-export const getCategories = projectId => {
+export function getCategories(projectId) {
   const categoriesRef = firebase.database().ref(`projects/${projectId}/categories/`)
   let categoriesArray = []
   categoriesRef.on('value', snapshot => {
@@ -12,7 +12,7 @@ export const getCategories = projectId => {
   return categoriesArray
 }
 
-export const getCategory = (projectId, categoryId) => {
+export function getCategory(projectId, categoryId) {
   const categoryRef = firebase.database().ref(`projects/${projectId}/categories/${categoryId}`)
   let category = {}
   categoryRef.on('value', snapshot => {
@@ -21,7 +21,7 @@ export const getCategory = (projectId, categoryId) => {
   return category
 }
 
-export const getMilestones = projectId => {
+export function getMilestones(projectId) {
   const milestonesRef = firebase.database().ref(`projects/${projectId}/milestones/`)
   let milestonesArray = []
   milestonesRef.on('value', snapshot => {
@@ -31,4 +31,19 @@ export const getMilestones = projectId => {
     )
   }, () => milestonesRef.off())
   return milestonesArray
+}
+
+export function addCategory(projectId, category) {
+  const categoryRef = firebase.database().ref(`projects/${projectId}/categories/`)
+  categoryRef.push(category, () => categoryRef.off())
+}
+
+export function addProject(project) {
+  const projectRef = firebase.database().ref('projects/')
+  projectRef.push({ ...project }, () => projectRef.off()) 
+}
+
+export function removeCategory(projectId, categoryId) {
+  const categoryRef = firebase.database().ref(`projects/${projectId}/categories/${categoryId}`)
+  categoryRef.remove(() => categoryRef.off())
 }
