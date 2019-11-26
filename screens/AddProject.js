@@ -7,12 +7,11 @@ AddProject.navigationOptions = {
 }
 
 export default function AddProject({ route, navigation }) {
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
   const [projectTitle, setProjectTitle] = useState('')
   const [projectDescr, setProjectDescr] = useState('')
   
   const addProject = () => {
-    setLoading(true)
     const project = {
       title: projectTitle,
       descr: projectDescr,

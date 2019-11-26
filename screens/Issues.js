@@ -30,7 +30,8 @@ export default function IssuesScreen({ route, navigation }) {
       )
       setIssuesList(issues)
       setLoading(false)
-    }, () => issuesRef.off())
+    })
+    return () => issuesRef.off()
   }, [])
 
   renderIssues = ({ item: issue }) => (

@@ -9,14 +9,13 @@ ManageCategories.navigationOptions = {
 }
 
 export default function ManageCategories({ route, navigation }) {
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
   const [category, setCategory] = useState({})
   const [categoryList, setCategoryList] = useState('')
   const projectId = navigation.getParam('projectId')
   const colorRef = useRef(null)
   
   useEffect(() => {
-    setLoading(true)
     const categoriesRef = firebase.database().ref(`projects/${projectId}/categories/`)
     categoriesRef.on('value', snapshot => {
       const data = snapshot.val()

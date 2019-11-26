@@ -8,13 +8,12 @@ ManageMilestones.navigationOptions = {
 }
 
 export default function ManageMilestones({ route, navigation }) {
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
   const [milestone, setMilestone] = useState({})
   const [milestoneList, setMilestoneList] = useState('')
   const projectId = navigation.getParam('projectId')
   
   useEffect(() => {
-    setLoading(true)
     const milestonesRef = firebase.database().ref(`projects/${projectId}/milestones/`)
     milestonesRef.on('value', snapshot => {
       const data = snapshot.val()

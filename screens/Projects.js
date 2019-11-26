@@ -7,11 +7,10 @@ ProjectsScreen.navigationOptions = {
 }
 
 export default function ProjectsScreen({ route, navigation }) {
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
   const [projectList, setProjectList] = useState([])
 
   useEffect(() => {
-    setLoading(true)
     const projectsRef = firebase.database().ref('projects/')
     projectsRef.on('value', snapshot => {
       const data = snapshot.val()
