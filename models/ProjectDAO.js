@@ -47,3 +47,11 @@ export function removeCategory(projectId, categoryId) {
   const categoryRef = firebase.database().ref(`projects/${projectId}/categories/${categoryId}`)
   categoryRef.remove(() => categoryRef.off())
 }
+
+export function removeProject(projectId) {
+  const projectIssuesRef = firebase.database().ref(`issues/${projectId}/`)
+  projectIssuesRef.remove(() => {
+    const projectRef = firebase.database().ref(`projects/${projectId}`)
+    projectRef.remove()
+  })
+}

@@ -1,6 +1,7 @@
 import * as firebase from 'firebase'
 import React, { useState, useEffect } from 'react'
-import { View, Text, Button, FlatList } from 'react-native'
+import { View, Text, Button, FlatList, Alert } from 'react-native'
+import { removeProject } from '../models/ProjectDAO'
 
 ProjectsScreen.navigationOptions = {
   title: 'Projects',
@@ -24,14 +25,25 @@ export default function ProjectsScreen({ route, navigation }) {
     return () => projectsRef.off()
   }, [])
 
-  removeProject = projectId => {
+  confirmRemove = project => {
+    Alert.alert(
+      `Remove ${project.title}?`,
+      `This will delete the project ${project.title} and all connected issues. Are you sure?`,
+      [{
+        text: 'Cancel',
+        onPress: () => { return },
+        style: 'cancel',
+      },
+      {text: 'OK', onPress: () => this.removeProject(project.id)}],
+      {cancelable: true},
+    )
+  }
+
+  this.removeProject = projectId => {
     setLoading(true)
-    const removeProjectIssues = firebase.database().ref(`issues/${projectId}/`)
-    removeProjectIssues.remove()
-    const removeProject = firebase.database().ref(`projects/${projectId}`)
-    removeProject.remove(() => {
+    Promise.resolve(removeProject(projectId)).then(() =>
       setLoading(false)
-    })
+    )
   }
 
   renderProjects = ({ item: project }) => (
@@ -39,7 +51,7 @@ export default function ProjectsScreen({ route, navigation }) {
       <Text>{project.title}</Text>
       <Text>{project.descr}</Text>
       <Button title="Go" onPress={() => navigation.navigate('Issues', { project })} />
-      <Button title="Delete" onPress={() => removeProject(project.id)} />
+      <Button title="Delete" onPress={() => confirmRemove(project)} />
     </View>
   )
 
