@@ -10,7 +10,7 @@ DetailsScreen.navigationOptions = {
 }
 
 export default function DetailsScreen({ route, navigation }) {
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
   const [issue, setIssue] = useState({})
   const [completedOn, setCompletedOn] = useState(false)
   const [category, setCategory] = useState(null)
@@ -18,7 +18,6 @@ export default function DetailsScreen({ route, navigation }) {
   const project = navigation.getParam('project')
 
   useEffect(() => {
-    setLoading(true)
     Promise.resolve(getIssue(project.id, id)).then(issue => {
       setIssue(issue)
       setCompletedOn(issue.completedOn || false)

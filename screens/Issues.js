@@ -2,13 +2,14 @@ import * as firebase from 'firebase'
 import React, { useState, useEffect, useMemo } from 'react'
 import { View, Text, FlatList } from 'react-native'
 import { Button, ListItem, ButtonGroup, SearchBar } from 'react-native-elements'
+import { getIssues } from '../models/IssueDAO'
 
 IssuesScreen.navigationOptions = {
   title: 'Issues',
 }
 
 export default function IssuesScreen({ route, navigation }) {
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
   const [issuesList, setIssuesList] = useState([])
   const [filter, setFilter] = useState(0)
@@ -20,18 +21,16 @@ export default function IssuesScreen({ route, navigation }) {
   })
 
   useEffect(() => {
-    setLoading(true)
-    const issuesRef = firebase.database().ref('issues/' + project.id)
+    const issuesRef = firebase.database().ref(`issues/${project.id}`)
     issuesRef.on('value', snapshot => {
-      const data = snapshot.val()
       const issues = []
+      const data = snapshot.val()
       data && Object.keys(data) && Object.keys(data).map(
-        id => issues.push({ id, ...data[id] })
+        id => issues.push({ id, ...data[id]})
       )
       setIssuesList(issues)
       setLoading(false)
-    })
-    return () => issuesRef.off()
+    }, () => issuesRef.off())
   }, [])
 
   renderIssues = ({ item: issue }) => (

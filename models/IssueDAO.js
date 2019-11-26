@@ -1,12 +1,24 @@
 import * as firebase from 'firebase'
 
-export const getIssue = (projectId, issueId) => {
+export function getIssue(projectId, issueId) {
   const issueRef = firebase.database().ref(`issues/${projectId}/${issueId}`)
   let issue = {}
   issueRef.on('value', snapshot => {
     issue = snapshot.val()
   }, () => issueRef.off())
   return issue
+}
+
+export function getIssues(projectId) {
+  const issuesRef = firebase.database().ref(`issues/${projectId}`)
+  let issues = []
+  issuesRef.on('value', snapshot => {
+    const data = snapshot.val()
+    data && Object.keys(data) && Object.keys(data).map(
+      id => issues.push({ id, ...data[id] })
+    )
+  }, () => issuesRef.off())
+  return issues
 }
 
 export const addIssue = issue => {

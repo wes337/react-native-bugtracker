@@ -51,7 +51,7 @@ export default function AddIssue({ route, navigation }) {
 
   this.updateIssue = () => {
     setLoading(true)
-    Promise.resolve(updateIssue(issue)).then(() => {
+    Promise.resolve(updateIssue({ ...issue,projectId: editIssue.projectId, id: editIssue.id})).then(() => {
       setLoading(false)
       navigation.navigate('Issues')
     })
