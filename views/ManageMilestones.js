@@ -47,9 +47,9 @@ export default function ManageMilestones({ route, navigation }) {
     return (
       <ListItem
         title={item.name}
-        subtitle="Test"
         rightElement={
           <View>
+            <Button title="View" onPress={() => navigation.navigate('MilestoneDetails', { projectId, milestone: item })} />
             <Button title="Remove" onPress={() => this.removeMilestone(item.id)} />
           </View>
         }

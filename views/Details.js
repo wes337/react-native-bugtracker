@@ -16,15 +16,15 @@ export default function DetailsScreen({ route, navigation }) {
   const [category, setCategory] = useState(null)
   const [milestone, setMilestone] = useState(null)
   const { id } = navigation.getParam('issue')
-  const project = navigation.getParam('project')
+  const projectId = navigation.getParam('projectId')
 
   useEffect(() => {
-    Promise.resolve(getIssue(project.id, id)).then(issue => {
+    Promise.resolve(getIssue(projectId, id)).then(issue => {
       setIssue(issue)
       setCompletedOn(issue.completedOn || false)
       Promise.all([
-        getCategory(project.id, issue.category),
-        getMilestone(project.id, issue.milestone)
+        getCategory(projectId, issue.category),
+        getMilestone(projectId, issue.milestone)
       ])
         .then(([category, milestone]) => {
           setCategory(category)
@@ -68,7 +68,7 @@ export default function DetailsScreen({ route, navigation }) {
       onPress={() => setCompletedOn(completedOn ? false : new Date())}
     />
     <Button title="Remove" onPress={() => this.removeIssue()} />
-    <Button title="Edit" onPress={() => navigation.navigate('AddEditIssue', { project, issue: { id, ...issue } })} />
+    <Button title="Edit" onPress={() => navigation.navigate('AddEditIssue', { projectId, issue: { id, ...issue } })} />
   </View>
   )
 }

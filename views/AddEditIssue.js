@@ -13,7 +13,7 @@ AddIssue.navigationOptions = {
 }
 
 export default function AddIssue({ route, navigation }) {
-  const project = navigation.getParam('project')
+  const projectId = navigation.getParam('projectId')
   const editIssue = navigation.getParam('issue')
   const [loading, setLoading] = useState(true)
   const [categoriesList, setCategoriesList] = useState([])
@@ -30,7 +30,7 @@ export default function AddIssue({ route, navigation }) {
 
   useState(() => {
     setLoading(true)
-    Promise.all([getCategories(project.id), getMilestones(project.id)])
+    Promise.all([getCategories(projectId), getMilestones(projectId)])
       .then(([categories, milestones]) => {
         setCategoriesList(categories)
         setMilestoneList(milestones)
@@ -42,7 +42,7 @@ export default function AddIssue({ route, navigation }) {
     setLoading(true)
     Promise.resolve(addIssue({
       ...issue,
-      projectId: project.id,
+      projectId,
       createdAt: new Date(),
     })).then(() => {
       setLoading(false)
@@ -83,7 +83,7 @@ export default function AddIssue({ route, navigation }) {
 
   return (
     <View>
-      <Text h3>{editIssue ? 'Edit' : 'Add'} Issue in {project.title}</Text>
+      <Text h3>{editIssue ? 'Edit' : 'Add'} Issue in Project</Text>
       <Input
         label="Title"
         style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}

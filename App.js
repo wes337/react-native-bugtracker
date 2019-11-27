@@ -5,6 +5,7 @@ import { createStackNavigator } from 'react-navigation-stack'
 import Projects from './views/Projects'
 import Issues from './views/Issues'
 import Details from './views/Details'
+import MilestoneDetails from './views/MilestoneDetails'
 import AddProject from './views/AddProject'
 import AddEditIssue from './views/AddEditIssue'
 import ManageCategories from './views/ManageCategories'
@@ -27,6 +28,7 @@ const AppNavigator = createStackNavigator({
   Projects,
   Issues,
   Details,
+  MilestoneDetails,
   AddProject,
   AddEditIssue,
   ManageCategories,
