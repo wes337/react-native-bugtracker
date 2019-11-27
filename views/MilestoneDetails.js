@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { View, FlatList } from 'react-native'
 import { Text, ListItem } from 'react-native-elements'
+import * as Progress from 'react-native-progress'
 import { getMilestone, getMilestoneIssues } from '../models/MilestoneDAO'
 
 DetailsScreen.navigationOptions = {
@@ -56,7 +57,8 @@ export default function DetailsScreen({ route, navigation }) {
     <Text h2>{milestone.name}</Text>
     {issueList.length > 0
       ? <>
-          <Text h3>{completedIssuesCount} of {issueList.length} Completed</Text>
+          <Text>{(completedIssuesCount / issueList.length * 100).toFixed(0)}% Completed</Text>
+          <Progress.Bar progress={completedIssuesCount / issueList.length} width={null} />
           <FlatList
             keyExtractor={item => item.id.toString()}
             data={issueList}
