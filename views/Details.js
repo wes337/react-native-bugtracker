@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { View } from 'react-native'
-import { Text, Button, CheckBox } from 'react-native-elements'
+import { Text, Button, CheckBox, Container, Content, Label, Header, Title, Textarea, Footer, FooterTab, Form, Item, Icon } from 'native-base'
 import { getIssue, updateIssue, removeIssue } from '../models/IssueDAO'
 import { getCategory } from '../models/CategoryDAO'
 import { getMilestone } from '../models/MilestoneDAO'
+import AppLoading from './AppLoading'
 
 DetailsScreen.navigationOptions = {
   title: 'Details',
@@ -50,25 +51,69 @@ export default function DetailsScreen({ route, navigation }) {
   }
 
   if (loading) {
-    return <View><Text>Loading...</Text></View>
+    return <AppLoading />
   }
 
   return (
-  <View>
-    <Text h2>{issue.title}</Text>
-    <Text>{issue.descr}</Text>
-    <Text style={{ display: milestone ? 'flex' : 'none' }}>{milestone && milestone.name}</Text>
-    <Text>{category ? category.name : 'No category'}</Text>
-    <Text style={{ display: issue.dueDate ? 'flex' : 'none' }}>Due on {issue.dueDate}</Text>
-    <Text>Importance: {issue.importance}</Text>
-    <Text style={{ display: completedOn ? 'flex' : 'none' }}>Completed on {completedOn ? completedOn.toString() : ''}</Text>
-    <CheckBox
-      title='Completed'
-      checked={completedOn ? true : false}
-      onPress={() => setCompletedOn(completedOn ? false : new Date())}
-    />
-    <Button title="Remove" onPress={() => this.removeIssue()} />
-    <Button title="Edit" onPress={() => navigation.navigate('AddEditIssue', { projectId, issue: { id, ...issue } })} />
-  </View>
+  <Container>
+    <Header>
+      <Title>{issue.title}</Title>
+    </Header>
+    <Content>
+      <Form style={{ textAlign: 'left' }}>
+        <Item stackedLabel>
+          <Label>Description</Label>
+          <Textarea
+            placeholder={issue.descr}
+            style={{ fontSize: 18 }}
+            placeholderTextColor="black"
+            rowSpan={4}
+            disabled={true}
+          />
+        </Item>
+        {milestone &&
+          <Item stackedLabel>
+            <Label>Milestone</Label>
+            <Text style={{ fontSize: 18 }}>{milestone.name}</Text>
+          </Item>}
+        <Item stackedLabel>
+          <Label>Category</Label>
+          <Text style={{ fontSize: 18 }}>{category ? category.name : 'No category'}</Text>
+        </Item>
+        {issue.dueDate &&
+          <Item stackedLabel>
+            <Label>Deadline</Label>
+            <Text style={{ fontSize: 18 }}>{issue.dueDate}</Text>
+          </Item>}
+        <Item stackedLabel>
+          <Label>Importance</Label>
+          <Text style={{ fontSize: 18 }}>{issue.importance}</Text>
+        </Item>
+        <Item stackedLabel>
+          <Label>Completed</Label>
+          <View style={{ flexDirection: 'row' }}>
+            <CheckBox
+                style={{ marginRight: 20 }}
+                checked={completedOn ? true : false}
+                onPress={() => setCompletedOn(completedOn ? false : new Date())}
+            />
+            <Text style={{ fontSize: 18 }}>{completedOn ? `Completed on ${completedOn ? completedOn.toString().substr(4, 12) : ''}` : ''}</Text>
+          </View>
+        </Item>
+      </Form>
+    </Content>
+    <Footer>
+      <FooterTab>
+        <Button onPress={() => this.removeIssue()}>
+          <Icon name="ios-trash" />
+          <Text>Remove</Text>
+        </Button>
+        <Button onPress={() => navigation.navigate('AddEditIssue', { projectId, issue: { id, ...issue } })}>
+          <Icon name="ios-create" />
+          <Text>Edit</Text>
+        </Button>
+      </FooterTab>
+    </Footer>
+  </Container>
   )
 }

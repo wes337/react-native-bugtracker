@@ -1,8 +1,9 @@
 import * as firebase from 'firebase'
-import React, { useState, useEffect, useRef, useMemo } from 'react'
+import React, { useState } from 'react'
 import { View, Text, Button, FlatList } from 'react-native'
 import { Input, ListItem } from 'react-native-elements'
-import { addMilestone, removeMilestone, getMilestoneIssues } from '../models/MilestoneDAO'
+import { addMilestone, removeMilestone } from '../models/MilestoneDAO'
+import AppLoading from './AppLoading'
 
 ManageMilestones.navigationOptions = {
   title: 'Milestones',
@@ -59,7 +60,7 @@ export default function ManageMilestones({ route, navigation }) {
   }
 
   if (loading) {
-    return <View><Text>Loading...</Text></View>
+    return <AppLoading />
   }
 
   return (

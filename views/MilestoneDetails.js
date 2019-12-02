@@ -3,6 +3,7 @@ import { View, FlatList } from 'react-native'
 import { Text, ListItem } from 'react-native-elements'
 import * as Progress from 'react-native-progress'
 import { getMilestone, getMilestoneIssues } from '../models/MilestoneDAO'
+import AppLoading from './AppLoading'
 
 DetailsScreen.navigationOptions = {
   title: 'Milestone Details',
@@ -49,7 +50,7 @@ export default function DetailsScreen({ route, navigation }) {
   )
 
   if (loading) {
-    return <View><Text>Loading...</Text></View>
+    return <AppLoading />
   }
 
   return (

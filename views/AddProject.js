@@ -1,7 +1,7 @@
-import * as firebase from 'firebase'
-import React, { useState, useEffect } from 'react'
-import { View, Text, TextInput, Button } from 'react-native'
+import React, { useState } from 'react'
+import { Container, Content, Form, Item, Input, Text, Textarea, Button } from 'native-base'
 import { addProject } from '../models/ProjectDAO'
+import AppLoading from './AppLoading'
 
 AddProject.navigationOptions = {
   title: 'Add Project',
@@ -26,28 +26,34 @@ export default function AddProject({ route, navigation }) {
   }
 
   if (loading) {
-    return <View><Text>Loading...</Text></View>
+    return <AppLoading />
   }
 
   return (
-    <View>
-      <Text>Add Project</Text>
-      <TextInput
-        style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
-        onChangeText={text => setProjectTitle(text)}
-        value={projectTitle}
-      />
-      <TextInput
-        multiline
-        numberOfLines={4}
-        style={{ height: 150, borderColor: 'gray', borderWidth: 1 }}
-        onChangeText={text => setProjectDescr(text)}
-        value={projectDescr}
-      />
-      <Button
-        title="Submit"
-        onPress={this.addProject}
-      />
-    </View>
+    <Container>
+      <Content padder>
+        <Form>
+          <Item>
+            <Input
+              placeholder="Title"
+              onChangeText={text => setProjectTitle(text)}
+              value={projectTitle}
+            />
+          </Item>
+          <Item last>
+            <Textarea
+              placeholder="Write a short description of the project."
+              rowSpan={4}
+              onChangeText={text => setProjectDescr(text)}
+              value={projectDescr}
+              style={{ width: '100%' }}
+            />
+          </Item>
+        </Form>
+        <Button block onPress={this.addProject} style={{ marginVertical: 10 }}>
+          <Text>Submit</Text>
+        </Button>
+      </Content>
+    </Container>
   )
 }

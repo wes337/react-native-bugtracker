@@ -1,6 +1,8 @@
 import * as firebase from 'firebase'
 import React, { useState, useEffect } from 'react'
-import { View, Text, Button, FlatList, Alert } from 'react-native'
+import { FlatList, Alert } from 'react-native'
+import { Container, Content, Button, Text, Card, CardItem, Body, Icon, Left, Right, H3 } from 'native-base'
+import AppLoading from './AppLoading'
 import { removeProject } from '../models/ProjectDAO'
 
 ProjectsScreen.navigationOptions = {
@@ -47,30 +49,42 @@ export default function ProjectsScreen({ route, navigation }) {
   }
 
   renderProjects = ({ item: project }) => (
-    <View style={{ borderColor: 'gray', borderWidth: 1, margin: 5, padding: 5 }}>
-      <Text>{project.title}</Text>
-      <Text>{project.descr}</Text>
-      <Button title="Go" onPress={() => navigation.navigate('Issues', { project })} />
-      <Button title="Delete" onPress={() => confirmRemove(project)} />
-    </View>
+    <Card>
+      <CardItem header bordered button onPress={() => navigation.navigate('Issues', { project })}>
+        <Left>
+          <H3 style={{ color: '#007aff' }}>{project.title}</H3>
+        </Left>
+        <Right>
+          <Button danger transparent>
+            <Icon name="ios-trash" onPress={() => confirmRemove(project)} />
+          </Button>
+        </Right>
+      </CardItem>
+      <CardItem>
+        <Body>
+          <Text>{project.descr}</Text>
+        </Body>
+      </CardItem>
+    </Card>
   )
 
   if (loading) {
-    return (<View><Text>Loading...</Text></View>)
+    return <AppLoading />
   }
 
   return (
-    <View>
-      <Text>Projects</Text>
-      <FlatList
-        keyExtractor={item => item.id.toString()}
-        data={projectList}
-        renderItem={renderProjects}
-      />
-      <Button
-        title="Add Project"
-        onPress={() => navigation.navigate('AddProject')}
-      />
-    </View>
+    <Container>
+      <Content padder>
+        <FlatList
+          keyExtractor={item => item.id.toString()}
+          data={projectList}
+          renderItem={renderProjects}
+        />
+        <Button block bordered onPress={() => navigation.navigate('AddProject')} style={{ marginVertical: 10 }}>
+          <Icon name="ios-add" />
+          <Text>Add Project</Text>
+        </Button>
+      </Content>
+    </Container>
   )
 }

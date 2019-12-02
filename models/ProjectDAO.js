@@ -12,3 +12,12 @@ export function removeProject(projectId) {
     projectRef.remove()
   })
 }
+
+export function getProject(projectId) {
+  const projectRef = firebase.database().ref(`projects/${projectId}`)
+  let project = {}
+  projectRef.on('value', snapshot => {
+    project = snapshot.val()
+  }, () => projectRef.off())
+  return project
+}
