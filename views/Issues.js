@@ -19,6 +19,7 @@ import {
   List,
   ListItem,
  } from 'native-base'
+ import { getCategory } from '../models/Category'
  import AppLoading from './AppLoading'
 
 IssuesScreen.navigationOptions = {
@@ -51,9 +52,20 @@ export default function IssuesScreen({ route, navigation }) {
     })
   }, [])
 
+  const categoryColor = categoryId => {
+    const category = getCategory(project.id, categoryId)
+    if (!category) {
+      return 'black'
+    }
+    return category.color
+  }
+
   renderIssues = issue => (
     <ListItem onPress={() => navigation.navigate('Details', { projectId: project.id, issue })}>
-      <Left><Text>{issue.title}</Text></Left>
+      <Left>
+        {issue.category && <Icon name="ios-square" style={{ color: categoryColor(issue.category) }} />}
+        <Text style={{ fontWeight: '500' }}>{issue.title}</Text>
+      </Left>
       <Body><Text>{issue.descr.length >= 30 ? issue.descr.substr(0, 30).concat('...') : issue.descr}</Text></Body>
       <Right><Icon name="ios-arrow-forward" /></Right>
     </ListItem>
