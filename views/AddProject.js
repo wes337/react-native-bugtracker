@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Container, Content, Form, Item, Input, Text, Textarea, Button } from 'native-base'
-import { addProject } from '../models/ProjectDAO'
+import { addProject } from '../models/Project'
 import AppLoading from './AppLoading'
 
 AddProject.navigationOptions = {

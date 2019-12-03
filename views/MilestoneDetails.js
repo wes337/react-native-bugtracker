@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { View, FlatList } from 'react-native'
 import { Text, ListItem } from 'react-native-elements'
 import * as Progress from 'react-native-progress'
-import { getMilestone, getMilestoneIssues } from '../models/MilestoneDAO'
+import { getMilestone, getMilestoneIssues } from '../models/Milestone'
 import AppLoading from './AppLoading'
 
 DetailsScreen.navigationOptions = {

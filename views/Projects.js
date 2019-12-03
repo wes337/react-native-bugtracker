@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react'
 import { FlatList, Alert } from 'react-native'
 import { Container, Content, Button, Text, Card, CardItem, Body, Icon, Left, Right, H3 } from 'native-base'
 import AppLoading from './AppLoading'
-import { removeProject } from '../models/ProjectDAO'
+import { removeProject } from '../models/Project'
 
 ProjectsScreen.navigationOptions = {
   title: 'Projects',

@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { View } from 'react-native'
 import { Text, Button, CheckBox, Container, Content, Label, Header, Title, Textarea, Footer, FooterTab, Form, Item, Icon } from 'native-base'
-import { getIssue, updateIssue, removeIssue } from '../models/IssueDAO'
-import { getCategory } from '../models/CategoryDAO'
-import { getMilestone } from '../models/MilestoneDAO'
+import { getIssue, updateIssue, removeIssue } from '../models/Issue'
+import { getCategory } from '../models/Category'
+import { getMilestone } from '../models/Milestone'
 import AppLoading from './AppLoading'
 
 DetailsScreen.navigationOptions = {

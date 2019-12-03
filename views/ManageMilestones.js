@@ -2,7 +2,7 @@ import * as firebase from 'firebase'
 import React, { useState } from 'react'
 import { View, Text, Button, FlatList } from 'react-native'
 import { Input, ListItem } from 'react-native-elements'
-import { addMilestone, removeMilestone } from '../models/MilestoneDAO'
+import { addMilestone, removeMilestone } from '../models/Milestone'
 import AppLoading from './AppLoading'
 
 ManageMilestones.navigationOptions = {

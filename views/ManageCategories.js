@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import { View, Text, Button, FlatList } from 'react-native'
 import { Input, ListItem } from 'react-native-elements'
 import ColorPicker from 'simple-react-native-color-picker'
-import { addCategory, removeCategory } from '../models/CategoryDAO'
+import { addCategory, removeCategory } from '../models/Category'
 import AppLoading from './AppLoading'
 
 ManageCategories.navigationOptions = {
