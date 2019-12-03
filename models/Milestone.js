@@ -1,5 +1,5 @@
 import * as firebase from 'firebase'
-import { getIssues } from './IssueDAO'
+import { getIssues } from './Issue'
 
 export function getMilestones(projectId) {
   const milestonesRef = firebase.database().ref(`projects/${projectId}/milestones/`)

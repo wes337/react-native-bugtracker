@@ -82,7 +82,7 @@ export default function ProjectsScreen({ route, navigation }) {
         />
         <Button block bordered onPress={() => navigation.navigate('AddProject')} style={{ marginVertical: 10 }}>
           <Icon name="ios-add" />
-          <Text>Add Project</Text>
+          <Text>New Project</Text>
         </Button>
       </Content>
     </Container>

@@ -1,7 +1,26 @@
 import * as firebase from 'firebase'
 import React, { useState, useEffect, useRef } from 'react'
-import { View, Text, Button, FlatList } from 'react-native'
-import { Input, ListItem } from 'react-native-elements'
+import {
+  Container,
+  Header,
+  Footer,
+  FooterTab,
+  Left,
+  Body,
+  Content,
+  Segment,
+  Right,
+  Button,
+  Icon,
+  Title,
+  Text,
+  Item,
+  Input,
+  List,
+  ListItem,
+  Form,
+  Label,
+ } from 'native-base'
 import ColorPicker from 'simple-react-native-color-picker'
 import { addCategory, removeCategory } from '../models/Category'
 import AppLoading from './AppLoading'
@@ -48,17 +67,15 @@ export default function ManageCategories({ route, navigation }) {
     )
   }
 
-  renderCategories = ({ item }) => (
-    <ListItem
-      title={item.name}
-      titleStyle={{ color: item.color || 'black' }}
-      rightElement={
-        <View>
-          <Button title="Remove" onPress={() => this.removeCategory(item.id)} />
-        </View>
-      }
-      bottomDivider
-    />
+  renderCategories = item => (
+    <ListItem>
+      <Left><Text style={{ color: item.color || 'black' }}>{item.name}</Text></Left>
+      <Right>
+        <Button small danger transparent onPress={() => this.removeCategory(item.id)}>
+          <Icon name="ios-trash" />
+        </Button>
+      </Right>
+    </ListItem>
   )
 
   if (loading) {
@@ -66,28 +83,31 @@ export default function ManageCategories({ route, navigation }) {
   }
 
   return (
-    <View>
-      <Text>Categories</Text>
-      <View>
-        <FlatList
+    <Container>
+      <Content padder>
+        <List
           keyExtractor={item => item.id.toString()}
-          data={categoryList}
-          renderItem={renderCategories}
+          dataArray={categoryList}
+          renderRow={renderCategories}
         />
-      </View>
-      <View>
-        <Input
-          style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
-          onChangeText={name => setCategory({ ...category, name })}
-          value={category.name}
-        />
-        <Text>Color</Text>
-        <ColorPicker colors={['blue', 'red', 'green', 'yellow', 'gray']}  ref={colorRef} />
-      </View>
-      <Button
-        title="Submit"
-        onPress={this.addCategory}
-      />
-    </View>
+        <Form>
+          <Item>
+            <Input
+              placeholder="New category name..."
+              onChangeText={name => setCategory({ ...category, name })}
+              value={category.name}
+            />
+          </Item>
+          <Item stackedLabel last>
+            <Label>Color</Label>
+            <ColorPicker colors={['blue', 'red', 'green', 'yellow', 'gray', 'orange', 'teal']}  ref={colorRef} />
+          </Item>
+        </Form>
+      <Button iconLeft block bordered onPress={this.addCategory} style={{ marginVertical: 10 }}>
+        <Icon name="ios-add" />
+        <Text>New Category</Text>
+      </Button>
+      </Content>
+    </Container>
   )
 }

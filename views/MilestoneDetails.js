@@ -1,6 +1,16 @@
 import React, { useState, useEffect } from 'react'
-import { View, FlatList } from 'react-native'
-import { Text, ListItem } from 'react-native-elements'
+import {
+  Body,
+  Content,
+  Container,
+  Text,
+  List,
+  ListItem,
+  Left,
+  Right,
+  Icon,
+  H2,
+} from 'native-base'
 import * as Progress from 'react-native-progress'
 import { getMilestone, getMilestoneIssues } from '../models/Milestone'
 import AppLoading from './AppLoading'
@@ -34,19 +44,17 @@ export default function DetailsScreen({ route, navigation }) {
     })
   }, [issueList])
 
-  renderIssues = ({ item: issue }) => (
-    <ListItem
-      title={issue.title}
-      subtitle={
-        <View>
-          <Text>{issue.descr}</Text>
-        </View>
-      }
-      onPress={() => navigation.navigate('Details', { projectId, issue })}
-      bottomDivider
-      chevron
-      checkmark={issue.completedOn ? true : false}
-    />
+  renderIssues = issue => (
+    <ListItem onPress={() => navigation.navigate('Details', { projectId, issue })}>
+      <Left>
+        <Text>{issue.title}</Text>
+        {issue.completedOn && <Icon name="ios-checkmark" style={{ color: '#5cb85c', marginHorizontal: 10 }} />} 
+      </Left>
+      <Body><Text>{issue.descr.length >= 30 ? issue.descr.substr(0, 30).concat('...') : issue.descr}</Text></Body>
+      <Right>
+        <Icon name="ios-arrow-forward" />
+      </Right>
+    </ListItem>
   )
 
   if (loading) {
@@ -54,21 +62,22 @@ export default function DetailsScreen({ route, navigation }) {
   }
 
   return (
-  <View>
-    <Text h2>{milestone.name}</Text>
+  <Container>
+    <Content padder>
+    <H2 style={{ textAlign: 'center', marginBottom: 5 }}>{milestone.name}</H2>
     {issueList.length > 0
       ? <>
-          <Text>{(completedIssuesCount / issueList.length * 100).toFixed(0)}% Completed</Text>
+          <Text style={{ textAlign: 'center', marginTop: 5, marginBottom: 10 }}>{(completedIssuesCount / issueList.length * 100).toFixed(0)}% Completed</Text>
           <Progress.Bar progress={completedIssuesCount / issueList.length} width={null} />
-          <FlatList
+          <List
             keyExtractor={item => item.id.toString()}
-            data={issueList}
-            renderItem={renderIssues}
+            dataArray={issueList}
+            renderRow={renderIssues}
           />
         </>
-      : <Text>No issues for {milestone.name}.</Text>
+      : <Text style={{ textAlign: 'center', marginVertical: 15 }}>No issues for {milestone.name}.</Text>
     }
-
-  </View>
+    </Content>
+  </Container>
   )
 }

@@ -1,7 +1,21 @@
 import * as firebase from 'firebase'
 import React, { useState } from 'react'
-import { View, Text, Button, FlatList } from 'react-native'
-import { Input, ListItem } from 'react-native-elements'
+import {
+  Content,
+  Container,
+  Header,
+  Title,
+  Form,
+  Item,
+  Button,
+  Text,
+  List,
+  ListItem,
+  Input,
+  Left,
+  Right,
+  Icon,
+} from 'native-base'
 import { addMilestone, removeMilestone } from '../models/Milestone'
 import AppLoading from './AppLoading'
 
@@ -44,46 +58,46 @@ export default function ManageMilestones({ route, navigation }) {
     )
   }
 
-  renderMilestones = ({ item }) => {
-    return (
-      <ListItem
-        title={item.name}
-        rightElement={
-          <View>
-            <Button title="View" onPress={() => navigation.navigate('MilestoneDetails', { projectId, milestone: item })} />
-            <Button title="Remove" onPress={() => this.removeMilestone(item.id)} />
-          </View>
-        }
-        bottomDivider
-      />
-    )
-  }
+  renderMilestones = milestone => (
+    <ListItem onPress={() => navigation.navigate('MilestoneDetails', { projectId, milestone })}>
+      <Left><Text>{milestone.name}</Text></Left>
+      <Right>
+        <Button danger transparent>
+          <Icon name="ios-trash" onPress={() => this.removeMilestone(milestone.id)} />
+        </Button>
+      </Right>
+    </ListItem>
+  )
 
   if (loading) {
     return <AppLoading />
   }
 
   return (
-    <View>
-      <Text>Milestones</Text>
-      <View>
-        <FlatList
+    <Container>
+      <Header>
+        <Title>Milestones</Title>
+      </Header>
+      <Content padder>
+        <List
           keyExtractor={item => item.id.toString()}
-          data={milestoneList}
-          renderItem={renderMilestones}
+          dataArray={milestoneList}
+          renderRow={renderMilestones}
         />
-      </View>
-      <View>
-        <Input
-          style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
-          onChangeText={name => setMilestone({ ...milestone, name })}
-          value={milestone.name}
-        />
-      </View>
-      <Button
-        title="Submit"
-        onPress={this.addMilestone}
-      />
-    </View>
+        <Form style={{ marginTop: 30 }}>
+          <Item>
+            <Input
+              placeholder="New milestone name..."
+              onChangeText={name => setMilestone({ ...milestone, name })}
+              value={milestone.name}
+            />
+          </Item>
+        </Form>
+        <Button iconLeft block bordered onPress={this.addMilestone} style={{ marginVertical: 10 }}>
+          <Icon name="ios-add" />
+          <Text>New Milestone</Text>
+        </Button>
+      </Content>
+    </Container>
   )
 }

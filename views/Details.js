@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { View } from 'react-native'
-import { Text, Button, CheckBox, Container, Content, Label, Header, Title, Textarea, Footer, FooterTab, Form, Item, Icon } from 'native-base'
+import { Text, Button, CheckBox, Container, Content, Label, Header, Title, Subtitle, Textarea, Footer, FooterTab, Form, Item, Icon, Left, Right, Body } from 'native-base'
 import { getIssue, updateIssue, removeIssue } from '../models/Issue'
 import { getCategory } from '../models/Category'
 import { getMilestone } from '../models/Milestone'
@@ -57,10 +57,15 @@ export default function DetailsScreen({ route, navigation }) {
   return (
   <Container>
     <Header>
-      <Title>{issue.title}</Title>
+      <Left />
+      <Body>
+        <Title>{issue.title}</Title>
+        <Subtitle>{category ? category.name : 'No category'}</Subtitle>
+      </Body>
+      <Right />
     </Header>
     <Content>
-      <Form style={{ textAlign: 'left' }}>
+      <Form>
         <Item stackedLabel>
           <Label>Description</Label>
           <Textarea
@@ -76,14 +81,10 @@ export default function DetailsScreen({ route, navigation }) {
             <Label>Milestone</Label>
             <Text style={{ fontSize: 18 }}>{milestone.name}</Text>
           </Item>}
-        <Item stackedLabel>
-          <Label>Category</Label>
-          <Text style={{ fontSize: 18 }}>{category ? category.name : 'No category'}</Text>
-        </Item>
         {issue.dueDate &&
           <Item stackedLabel>
             <Label>Deadline</Label>
-            <Text style={{ fontSize: 18 }}>{issue.dueDate}</Text>
+            <Text style={{ fontSize: 18 }}>{issue.dueDate.toString()}</Text>
           </Item>}
         <Item stackedLabel>
           <Label>Importance</Label>
@@ -97,7 +98,7 @@ export default function DetailsScreen({ route, navigation }) {
                 checked={completedOn ? true : false}
                 onPress={() => setCompletedOn(completedOn ? false : new Date())}
             />
-            <Text style={{ fontSize: 18 }}>{completedOn ? `Completed on ${completedOn ? completedOn.toString().substr(4, 12) : ''}` : ''}</Text>
+            <Text style={{ fontSize: 18 }}>{completedOn ? `Completed on ${completedOn ? completedOn.toString() : ''}` : ''}</Text>
           </View>
         </Item>
       </Form>

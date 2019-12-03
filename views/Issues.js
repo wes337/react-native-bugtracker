@@ -105,7 +105,7 @@ export default function IssuesScreen({ route, navigation }) {
           dataArray={filteredIssuesList}
           renderRow={renderIssues}
         />
-        <Button block bordered onPress={() => navigation.navigate('AddEditIssue', { projectId: project.id })} style={{ marginVertical: 10 }}>
+        <Button iconLeft block bordered onPress={() => navigation.navigate('AddEditIssue', { projectId: project.id })} style={{ marginVertical: 10 }}>
           <Icon name="ios-add" />
           <Text>New Issue</Text>
         </Button>
