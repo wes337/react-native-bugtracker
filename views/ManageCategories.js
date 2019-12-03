@@ -2,17 +2,11 @@ import * as firebase from 'firebase'
 import React, { useState, useEffect, useRef } from 'react'
 import {
   Container,
-  Header,
-  Footer,
-  FooterTab,
   Left,
-  Body,
   Content,
-  Segment,
   Right,
   Button,
   Icon,
-  Title,
   Text,
   Item,
   Input,
