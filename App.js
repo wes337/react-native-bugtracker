@@ -12,7 +12,7 @@ import ManageCategories from './views/ManageCategories'
 import ManageMilestones from './views/ManageMilestones'
 
 // Initialize Firebase
-firebase.initializeApp(process.ENV.firebaseConfig)
+firebase.initializeApp(process.env.firebaseConfig)
 
 const AppNavigator = createStackNavigator({
   Projects,
